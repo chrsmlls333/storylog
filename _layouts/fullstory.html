@@ -1,0 +1,151 @@
+---
+layout: default
+---
+
+{% assign story = page %}
+
+{% assign chapters = site.chapters | where: "series", story.title %}
+
+<article class="story" itemscope itemtype="http://schema.org/ShortStory">
+
+  <header class="post-header">
+
+    <h1 class="site-title" itemprop="name headline">
+
+      {% assign stories_page = site.pages | find: "title", "Stories" %}
+      {% assign home = site.pages | find: "url", "/" %}
+
+      <span class="slash"><a href="{{ stories_page.url }}#{{ story.title | slugify }}">{{ stories_page.title }}</a></span>
+      <!-- <span class="slash"><a href="{{ stories_page.url }}">{{ stories_page.title }}</a></span> -->
+      <span>{{ story.title }}</span>
+
+    </h1>
+
+    <ul class="post-meta">
+
+      {%- comment -%} Calculate dates {%- endcomment -%}
+      <li>{%- include story-time.html post=story -%}</li>
+
+      {%- comment -%} Author {%- endcomment -%}
+      {% if story.author %} 
+        <li><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ story.author }}</span></span></li>
+      {% endif %}
+
+      {%- comment -%} Editor {%- endcomment -%}
+      {% if story.editor %} 
+        <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Edited by {{ story.editor }}</span></span></li>
+      {% endif %}
+
+      {%- comment -%} Word Count {%- endcomment -%}
+      {% assign totalwords = 0 %}
+      {% for chapter in chapters %}
+        {% assign chapterwords = chapter.content | markdownify | number_of_words %}
+        {% assign totalwords = totalwords | plus: chapterwords %}
+      {% endfor %}
+      <li><span itemprop="wordCount">{{ totalwords | append: ' words' }}</span></li>
+
+      {%- comment -%} Tags {%- endcomment -%}
+      {% include post-meta-tags.html post=story %}
+
+    </ul>
+  </header>
+
+
+  {%- comment -%} Description Block {%- endcomment -%}
+  {% if story.description %}
+    <section class="post-content">
+      {{ story.description | markdownify }}
+    </section>
+  {% endif %}
+
+
+  {%- comment -%} Disclaimer Block {%- endcomment -%}
+  {% if story.disclaimer %}
+    <section class="post-disclaimer">
+      {{ story.disclaimer | markdownify }}
+    </section>
+  {% endif %}
+
+
+  {%- comment -%} Post Lists {%- endcomment -%}
+  {%- include story-chapter-toc.html chapters=chapters -%}
+
+
+  {%- comment -%} CHAPTERS {%- endcomment -%}
+
+  {% for chapter in chapters  %}
+  <hr>
+  <article class="chapter" itemscope itemtype="https://schema.org/Chapter">
+    
+    {% if chapters.size > 1 %}
+    <header class="post-header">
+
+      <h1 class="post-title" itemprop="name headline">
+        {% if chapter.part and chapter.part != chapter.entry %}
+          <span class="dot">{{ chapter.part }}</span>
+          <!-- <span></span> -->
+        {% endif %}
+        {% assign entry = chapter.entry %}
+        {% unless entry %}
+          {% assign entry = "Untitled" %}
+        {% endunless %}
+        <span><a href="{{chapter.url}}">{{ entry }}</a></span>
+        
+      </h1>
+
+      <ul class="post-meta">
+
+        {%- comment -%} Post Date {%- endcomment -%}
+        <time datetime="{{ chapter.date | date_to_xmlschema }}" itemprop="datePublished">{{ chapter.date | date_to_string: "ordinal", "US" }}</time>
+
+        {%- comment -%} Word Count {%- endcomment -%}
+        <span class="dot"></span>
+        <span itemprop="wordCount">{{ chapter.content | markdownify | number_of_words | append: ' words' }}</span>
+
+        {%- comment -%} Tags {%- endcomment -%}
+        {%- comment -%} {% include post-meta-tags.html post=chapter %} {%- endcomment -%}
+      </ul>
+
+    </header>    
+    {% endif %}
+
+
+    {% if chapter.disclaimer %}
+    <section class="post-disclaimer">
+      {{ chapter.disclaimer | markdownify }}
+      <hr>
+    </section>
+    {% endif %}
+
+
+    <section class="chapter-content" itemprop="articleBody">
+      {{ chapter.content | liquefy | markdownify }}
+    </section>
+
+
+    {% if chapter.endnote %}
+    <section class="post-endnote">
+      <hr>
+      {{ chapter.endnote | markdownify }}
+    </section>
+    {% endif %}
+
+
+  </article>
+  {% endfor %}
+
+  {% if story.endnote %}
+  <section class="post-endnote">
+    <hr>
+    {{ story.endnote | markdownify }}
+  </section>
+  {% endif %}
+
+  {% if page.comment %}
+    {% include comments.html %}
+  {% endif %}
+
+</article>
+
+{%- comment -%} Top Button {%- endcomment -%}
+{% include top-button.html %}

@@ -1,13 +1,21 @@
+---
+---
+
+{%- if page.collection -%}
+  {%- comment -%} Post or chapter, etc {%- endcomment -%}
+  {%- assign bodyclass = page.collection | slugify | prepend: 'collection-' -%}
+{%- else -%}
+  {%- comment -%} Page {%- endcomment -%}
+  {%- assign bodyclass = page.title | slugify | prepend: 'page-' -%}
+{%- endif -%}
+
 <!DOCTYPE html>
-<html>
+<html lang="en-US" preload>
   {% include head.html %}
-  <body>
+  <body class="{{ bodyclass }}">
     <div class="page-content">
       {{ content }}
-      <div class="copyright">
-        <p>&copy; {{ site.time | date: '%Y' }} <a href="{{ '/' | prepend: site.baseurl | prepend: site.url }}"><strong>{{ site.title }}</strong></a> ― Powered by <a href="https://jekyllrb.com/">Jekyll</a> and <a href="https://github.com/heiswayi/textlog">Textlog theme</a></p>
-      </div>
+      {% include footer-copyright.html %}
     </div>
-    {% include google_analytics.html %}
   </body>
 </html>

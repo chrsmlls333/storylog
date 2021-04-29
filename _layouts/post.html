@@ -1,35 +1,49 @@
 ---
 layout: default
 ---
+
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <p class="post-meta">
-      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %d, %Y" }}</time>
-      {% if page.author %} &middot; <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}
 
-      {% assign post = page %}
-  		{% if post.tags.size > 0 %}
+    {% include post-nav.html %}
 
-  		{% assign tags_content = "" %}
-  		{% for post_tag in post.tags %}
-  			{% capture tags_content_temp %}
-  				{{ tags_content }}<a href="{{ site.url }}{{ site.baseurl }}/tagged#{{ post_tag | slugify }}">#{{ post_tag }}</a>
-  			{% endcapture %}
-  			{% assign tags_content = tags_content_temp %}
-  		{% endfor %}
+    <h1 class="site-title" itemprop="name headline">
+      {% assign home = site.pages | find: "title", "Blog" %}
+      <span class="slash"><a href="{{ home.url }}">{{ home.title }}</a></span>
+      <span>{{ page.title }}</span>
+    </h1>
 
-  		&middot;	<span class="tags" itemprop="tags">{{ tags_content }}</span>
+    <ul class="post-meta">
 
-  	  {% endif %}
+      {%- comment -%} Post Date {%- endcomment -%}
+      <li>{%- include post-time.html post=page shorten=false -%}</li>
+      
+      {%- comment -%} Author {%- endcomment -%}
+      {% if page.author %} 
+        <li><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span></li>
+      {% endif %}
 
-    </p>
+      {%- comment -%} Tags {%- endcomment -%}
+      {% include post-meta-tags.html post=page %}
+
+    </ul>
+
   </header>
+
   <div class="post-content" itemprop="articleBody">
     {{ content }}
   </div>
-  <hr>
+
   {% if page.comment %}
-    {% include disqus.html %}
+    <!-- <hr> -->
+    {% include comments.html %}
   {% endif %}
+
+  {%- comment -%}
+  <footer>
+    {% include post-nav.html %}
+  </footer>
+  {%- endcomment -%}
+  
 </article>

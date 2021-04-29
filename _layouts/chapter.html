@@ -1,0 +1,105 @@
+---
+layout: default
+---
+
+
+{% assign stories_page = site.pages | find: "title", "Stories" %}
+{% assign story = site.stories | find: "title", page.series %}
+
+
+<article class="chapter" itemscope itemtype="https://schema.org/Chapter">
+
+  <header class="post-header">
+
+    {% include post-nav.html %}
+
+    <h1 class="site-title" itemprop="name headline">
+      {% if page.series and page.series != page.entry %}
+        
+        {%- if story -%}
+          <span><a href="{{ stories_page.url }}#{{ story.title | slugify }}">{{ story.title }}</a></span>
+          <!-- <span><a href="{{ story.url }}">{{ story.title }}</a></span> -->
+        {%- else -%}
+          <span><a href="{{ stories_page.url }}">{{ page.series }}</a></span>
+        {%- endif -%}
+        
+        {% if page.part and page.part != page.entry %}
+          <span>{{ page.part }}</span>
+        {% endif %}
+        
+        {%- assign entry = "Untitled Chapter" -%}
+        {% if page.entry %}{%- assign entry = page.entry -%}{% endif %}
+        <span>{{ entry }}</span>        
+
+      {% else %}
+
+        <span class="slash"><a href="{{ stories_page.url }}">{{ stories_page.title }}</a></span>
+        <span>{{ page.title }}</span>
+
+      {% endif %}
+    </h1>
+
+
+    <ul class="post-meta">
+
+      {%- comment -%} Post Date {%- endcomment -%}
+      <li>{%- include post-time.html post=page shorten=false -%}</li>
+      
+      {%- comment -%} Author {%- endcomment -%}
+      {% assign author = page.author %}
+      {% if story.author %}{% assign author = story.author %}{% endif %}
+      {% if author %}
+        <li><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ author }}</span></span></li>
+      {% endif %}
+
+      {%- comment -%} Editor {%- endcomment -%}
+      {% assign editor = page.editor %}
+      {% if story.editor %}{% assign editor = story.editor %}{% endif %}
+      {% if editor %} 
+        <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Edited by {{ editor }}</span></span></li>
+      {% endif %}
+
+      {%- comment -%} Word Count {%- endcomment -%}
+      <li><span itemprop="wordCount">{{ content | markdownify | number_of_words | append: ' words' }}</span></li>
+
+      {%- comment -%} Tags {%- endcomment -%}
+      {% include post-meta-tags.html post=page %}
+
+    </ul>
+
+  </header>
+
+
+  {% if story.disclaimer or page.disclaimer %}
+  <section class="post-disclaimer">
+      {{ story.disclaimer | markdownify }}
+      {{  page.disclaimer | markdownify }}
+      <hr>
+  </section>
+  {% endif %}
+
+
+  <section class="chapter-content" itemprop="articleBody">
+    {{ content }}
+  </section>
+
+
+  {% if story.endnote or page.endnote %}
+  <section class="post-endnote">
+    <hr>
+    {{  page.endnote | markdownify }}
+    {{ story.endnote | markdownify }}
+  </section>
+  {% endif %}
+
+
+  {% if page.comment %}
+    {% include comments.html %}
+  {% endif %}
+  
+
+  <footer>
+    {% include post-nav.html %}
+  </footer>
+
+</article>
