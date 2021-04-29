@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'Freestyle Script Regular';
+    src: url('../fonts/Freestyle Script Regular/freestyle_script_regular.woff2') format('woff2'),
+         url('../fonts/Freestyle Script Regular/freestyle_script_regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.cursive-font {
+    font-family: 'Freestyle Script Regular';
+}
+
+@font-face {
+    font-family: "WinJS Symbols";
+    src: url('../fonts/Symbols/winjs-symbols.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Symbols/winjs-symbols.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/Symbols/winjs-symbols.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/Symbols/winjs-symbols.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/Symbols/winjs-symbols.ttf')  format('truetype'), /* Safari, Android, iOS */
+         url('../fonts/Symbols/winjs-symbols.svg#Symbols') format('svg'); /* Legacy iOS */
+}
+
+.symbols-font {
+    font-family: "WinJS Symbols";
+}

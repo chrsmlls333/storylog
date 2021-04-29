@@ -1,0 +1,132 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+// OUR MIXINS AND PLACEHOLDERS
+//////////////////////////////////////////////////////////////////////////////////////////
+
+%clearfix {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// Use media queries like this:
+// @include media-query($on-palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
+
+@mixin media-query($width) {
+    @media screen and (max-width: $width) {
+        @content;
+    }
+}
+
+@mixin light-mode {
+    [data-theme=light] & {
+        @content;
+    }
+}
+
+@mixin dark-mode {
+    [data-theme=dark] & {
+        @content;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+%print-hide {
+    @media print {
+        display: none !important;
+    }
+}
+
+%print-only {
+    display: none;
+    @media print {
+        display: inherit;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+/// Mixin to prefix several properties at once
+/// @author Hugo Giraudel
+/// @param {Map} $declarations - Declarations to prefix
+/// @param {List} $prefixes (()) - List of prefixes to print
+@mixin prefix($declarations, $prefixes: ()) {
+    @each $property, $value in $declarations {
+        @each $prefix in $prefixes {
+            #{'-' + $prefix + '-' + $property}: $value;
+        }
+  
+        // Output standard non-prefixed declaration
+        #{$property}: $value;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// Shorthand
+@mixin mode-transition($property...) {
+    @include prefix((
+        transition-property: $property,
+        transition-duration: $theme-transition-duration,
+        transition-timing-function: $theme-transition-curve,
+        transition-delay: $theme-transition-delay,
+    ), webkit);
+}
+
+@mixin mode-transition-default() {
+    @include mode-transition(color, background-color, border-color)
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+@function headings($from:1, $to:6) { //Heading shorthand
+    @if $from == $to {
+        @return 'h#{$from}';
+    } @else {
+        @return 'h#{$from},' + headings($from+1, $to);
+    }
+}
+
+@function su($mult: null) { //Spacing unit shorthand
+    @if ($mult != null) {
+        @return calc( var(--spacing-unit) * #{$mult} );
+    } @else {
+        @return var(--spacing-unit);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+    Text Overflow Fixes
+    https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+*/
+%overflow-wrap {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    @include prefix((
+        word-break: break-word,
+    ), ms);
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    // @include prefix((
+    //     hyphens: auto,
+    // ), ms moz webkit);
+}
+
+%overflow-ellipses {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,78 @@
+
+/*
+    Commento
+*/
+.commento-root {
+    padding: 0 su(1/2) !important;
+    width: auto !important;
+    // border: medium dotted var(--color-grey-light);
+
+    * {
+        font-family: var(--font-family-code);
+    }
+
+    .commento-logged-container {
+        margin-bottom: 0.3rem !important;
+    }
+
+    textarea {
+        min-height: 4em !important;
+        min-width: calc(100% - 18px) !important;
+
+        &::placeholder {
+            font-size: 1em !important;
+            display: flex !important;
+            line-height: var(--line-height-base) !important;
+            justify-content: left !important;
+            align-items: left !important;
+            text-align: left !important;
+        }
+    }
+
+    .commento-markdown-button {
+        visibility: hidden;
+    }
+
+    input[type=text], textarea, input[type=checkbox]+label:before {
+        background-color: $bg-color-base !important;
+
+        @include dark-mode {
+            background-color: invert(invert($bg-color-base, 85%)) !important;
+        }
+        @include mode-transition-default;
+    }
+
+    .commento-button {
+        box-shadow: none !important;
+
+        @include dark-mode {
+            color: invert($color: #fff) !important;
+        }
+    }
+
+    // .commento-submit-button {
+    //     background-color: var(--color-grey) !important;
+    // }
+
+    .commento-card {
+        border-top-color: #bbbbbb !important;
+
+        .commento-option-button {
+            background-color: #c5c5c5 !important;
+        }
+    }
+
+    .commento-logo-container {
+        display: none;
+    }
+    
+    @include prefix((
+        filter: grayscale(1),
+    ), webkit);
+
+    @include dark-mode {
+        @include prefix((
+            filter: grayscale(1) invert(1) hue-rotate(180deg),
+        ), webkit);
+    }
+}

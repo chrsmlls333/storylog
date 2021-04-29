@@ -1,48 +1,107 @@
 ---
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
+
 @charset "utf-8";
 
-// Our variables
-$base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-$code-font-family: Inconsolata, Monaco, Consolas, monospace;
-$base-font-size:   16px;
-$base-font-weight: 300;
-$small-font-size:  0.875rem;
-$big-font-size:    1.3rem;
-$base-line-height: 1.5;
+@import 
+    "mixins",
+    "fonts"
+;
 
-$spacing-unit:     2rem;
-$max-width:        48rem;
-
-$text-color:       #333;
-$background-color: #fff;
-$link-color:       #0645ad;
-
-$grey-color:       #aaa;
-$grey-color-light: lighten($grey-color, 25%);
-$grey-color-dark:  darken($grey-color, 25%);
+// OUR VARIABLES
 
 // Width of the content area
-$on-palm:          600px;
-$on-:              800px;
+$on-palm:           600px;
+$on-:               850px;
 
-// Use media queries like this:
-// @include media-query($on-palm) {
-//     .wrapper {
-//         padding-right: $spacing-unit / 2;
-//         padding-left: $spacing-unit / 2;
-//     }
-// }
-@mixin media-query($device) {
-    @media screen and (max-width: $device) {
-        @content;
-    }
+// Timings
+$theme-transition-duration: 300ms;
+$theme-transition-curve:    ease;
+$theme-transition-delay:    0s;
+
+
+// Colors needed for both themes
+$color-background-base-ref:      #fff;
+$color-background-highlight-ref: #fee9ad; // #fefac7;
+$color-text-base-ref:            #333;
+$color-text-link-ref:            #000;
+$color-grey-ref:                 #aaa;
+
+@mixin css-vars {
+    // $base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-family-serif:    Palatino, Palatino Linotype, Palatino LT STD, Book Antiqua, Georgia, serif; 
+    --font-family-code:     Inconsolata, Monaco, Consolas, monospace;
+    --font-family-cursive:  'Freestyle Script Regular';
+    --font-family-symbols:  'WinJS Symbols';
+
+    --font-weight-base:     300;
+    --font-size-base:       19px;
+    --font-size-small:      0.8em;
+    --font-size-big:        1.3em;
+    --line-height-base:     1.6;
+    --line-height-content:  1.5;
+    --line-height-title:    1.2;
+    
+    --spacing-unit:         2rem;
+    --max-width:            48rem;
 }
 
-// Import partials from `sass_dir` (defaults to `_sass`)
-@import
-        "base",
-        "layout",
-        "syntax-highlighting"
+// LIGHT THEME
+@mixin light-theme {
+
+    --color-background:             #{ $color-background-base-ref };
+    --color-text-base:              #{ $color-text-base-ref };
+    --color-text-bold:              #{ $color-text-base-ref };
+    --color-text-link:              #{ $color-text-link-ref };
+
+    --color-text-highlight:         #{ $color-text-base-ref };
+    --color-background-highlight:   #{ fade-out($color-background-highlight-ref, 25% / 100%) };
+    
+    --color-grey:                   #{ $color-grey-ref };
+    --color-grey-faint:             #{ lighten($color-grey-ref, 30%) };
+    --color-grey-light:             #{ lighten($color-grey-ref, 25%) };
+    --color-grey-dark:              #{ darken($color-grey-ref, 25%) };
+}
+
+// DARK THEME
+@mixin dark-theme {
+
+    --color-background:             #{ invert($color-background-base-ref, 85%) };
+    --color-text-base:              #{ invert($color-text-base-ref) };
+    --color-text-bold:              #{ lighten(invert($color-text-base-ref), 10%) };
+    --color-text-link:              #{ invert($color-text-link-ref) };
+
+    --color-text-highlight:         #{ $color-text-base-ref };
+    --color-background-highlight:   #{ fade-out($color-background-highlight-ref, 15% / 100%) };
+
+    $color-grey-new-ref:               lighten(invert($color-grey-ref), 10%);
+    --color-grey:                   #{ $color-grey-new-ref };
+    --color-grey-faint:             #{ darken($color-grey-new-ref, 25%) };
+    --color-grey-light:             #{ darken($color-grey-new-ref, 20%) };
+    --color-grey-dark:              #{ lighten($color-grey-new-ref, 20%) };
+}
+
+//Load CSS Vars into HTML selector
+:root { @include css-vars }
+:root, :root[data-theme=light] { @include light-theme; }
+:root[data-theme=dark] { @include dark-theme; }
+@media (prefers-color-scheme: dark) {
+    :root, :root[data-theme=dark] { @include dark-theme; } 
+    :root[data-theme=light] { @include light-theme; }
+}
+
+// BASE64 Vars
+$b64-middot-5px:    url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwAAADsABataJCQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMkMEa+wAAAAnSURBVBhXY/Dz89MA4sNA/B9Ka4AEYQIwfBgkiCwAxjhVopnppwEApxQqhnyQ+VkAAAAASUVORK5CYII=);
+$b64-middot-25px:   url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAACJUlEQVRIibXWOWtUYRTG8V9uJiaYRFRcIS7gMhY2GjcEC0st4vIlUtrox7CwEku/gEQQUUsrd2wUcSuMKwYNcQlGMXLkXB3GURzmzoGBmeG95/+e52y3Z2xsTAurYTHWYDe2YyOWYwFm8QoPcRO38/cMvje7qzX97sFCbMJRHMAIBtGf54t0tAV789wTnMcFPMMc5ltBArAE+zGObRlN80UkqD8/w1iRF9uD07iFTyWot16vl4BwGNqdwGg+3NtKyxbRx7khrEc4fJ7yfS1vJCWKCI5hKwby4XasJ0G7cBw7M38/IbUMdTx17mvTebPFBXekv3XBKFKmI5mDgQ4BGiLal4UzXGT1HMyktyvRv0DLcBiri+yDkb9UUSfWl701WmQlDVUMKKNZFAUQkA1lFXTBoo/qRWpXtVSlhWQri4yiqoQ3W/gfLLL9/xhqFVmMlbmAvC7bvwv2DVMBeYAvXYKE38dFTsyZxtFcoX2MXROQO7l85ioGhFQvcD0gbzCBtxVGE37e4yImA/IBl3A1v1cBilzcxTlMl6t0EmcyP7MdgqJS7+eGfBSylZsxQFOp4dqcAu026XxGcA+ncCWV+bV+ZaJeZhHEYFua+6X4D1g8+y6SjJMJmC4VaZxZ8cdnXEtYLJxDubNj38ewi1kU0DgbjuPmMTFC7khyFFBIFH5avq2UoCjlpziLy/nOFXt7M1blWgjnIW84jBa4kS8PcfuA/zb8AL58erTt509TAAAAAElFTkSuQmCC);
+$b64-slash:         url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAcCAYAAACH81QkAAABfklEQVQ4jZXVv0tWURzH8ZcmBS1pRVAQOOSgQltE0FYkQj0QijgIglpIU39F1GBDEBG119AgLQ5iTQ0ROTjUIBK4KoIO/hjSOPC9cXjw8bnnAxe+n3PvffPlfM/n3o5Go6FQ5/Ead/EI852lBNzHOC7iBbpLIRcwm/mv2CmF3MatqPfxDoclkHOxB5WW8CvVJZAbGIr6CHPYK4GcxQy6wn/B9+pmXch1jGRdpBHvlkBOYyrrYjk6+a86kD6MZv4VtksgpzCJnvB/sND8UDtIb5zOSi+xUQLpjIlcDb+Jz60ebKUreJDdSxNZL4WkzRyMegcfT2r5OF3CWLb+AaulkDtZ0LZjrH9LIGmc05lfxForQCvIzehExP05DkogKe5PMv8Nv08CHAfpx3DUh3iWB60OJMX9aRa0H/jZDtAMGcC9zM81B60dJMX9cRa0lfj81VIFuYaH2QtvsFUCSddE/EeSUtw/1QVUkDO4nK29j8QWQdIX+20kNJ3OVNcX/gEiRkAU50Fq0wAAAABJRU5ErkJggg==);
+
+// IMPORT REST OF STYLES
+@import 
+    "base",
+    "extra",
+    "layout_page",
+    "layout_post",
+    "post-lists",
+    "print"
 ;

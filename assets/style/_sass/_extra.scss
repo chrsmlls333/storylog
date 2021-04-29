@@ -1,0 +1,342 @@
+/*
+    Selection highlighting
+*/
+::selection {
+    text-shadow: none;
+    color: var(--color-text-highlight);
+    background-color: var(--color-background-highlight);
+
+    @include mode-transition(color, background-color);
+}
+
+/*
+    Target highlighting/scolling 
+*/
+@media (prefers-reduced-motion: no-preference) { 
+    :root:not([preload]) {
+        scroll-behavior: smooth;
+    }
+}
+
+//footnotes
+.post-content {
+    :target { 
+        animation: footnote-fade 5s ease 1;
+
+        @keyframes footnote-fade {
+            0% { 
+                color: var(--color-text-highlight);
+                background-color: var(--color-background-highlight); 
+            }
+        }
+    }
+}
+
+//tags
+.tag-title {
+    &:target::before { 
+        animation: tag-fade 5s ease 1;
+
+        @keyframes tag-fade {
+            0% { 
+                color: var(--color-text-bold);
+            }
+        }
+    }
+}
+
+//stories
+.story-summary {
+    &:target {
+        $offset-pos: su(2);
+        $offset-inv: calc( #{$offset-pos} * -1);
+
+        // top: $offset-inv;
+
+        &::before {
+            content: "";
+            display: block;
+            height: $offset-pos;
+            margin: $offset-inv 0 0;
+        }
+
+        .watermark {
+            top: $offset-pos;
+        }
+    }
+}
+
+/*
+    Underlining
+*/
+.underlined {
+    flex: 1;
+    text-decoration: none;
+    background-image: linear-gradient(to right, yellow 0, yellow 100%);
+    background-position: 0 1.2em;
+    background-size: 0 100%;
+    background-repeat: no-repeat;
+    transition: background .5s;
+    &:hover {
+        background-size: 100% 100%;
+    }
+    &--thin {
+        background-image: linear-gradient(to right, black 0, black 100%);
+    }
+    &--thick {
+        background-position: 0 -0.1em;
+    }
+    &--offset {
+        background-position: 0 0.2em;
+        //didn't find another solution than mask the underline shape by a box shadow with the same color than the bg
+        box-shadow: inset 0 -.5em 0 0 white;
+    }
+    &--gradient {
+        background-position: 0 -0.1em;
+        background-image: linear-gradient(to right, yellow 0, lightgreen 100%);
+    }
+    &--reverse {
+        background-position: 100% -0.1em;
+        transition: background 1s; //yep, that's a long link
+        background-image: linear-gradient(to right, yellow 0, yellow 100%);
+    }
+}
+
+.icon {
+//     font-family: "Symbols", sans-serif;
+}
+
+/*
+    Big Sig
+*/
+.signature {
+    font-family: var(--font-family-cursive); 
+    font-size: 3em;
+    text-indent: 0 !important;
+}
+
+/*
+    Illustration Icons
+*/
+li.illustrated {
+    list-style-type: none;
+
+    @mixin icon-mask {
+        @include prefix((
+            mask-image: url("/assets/icon/photo.svg"),
+            mask-repeat: no-repeat,
+            mask-position: center left,
+        ), webkit);
+
+        background-color: var(--color-grey);
+
+        @include mode-transition-default;
+    }
+
+    &::before {
+        content: '';
+        display: inline-block;
+
+        height: calc( var(--line-height-base) * 0.9em);
+        width: 1em;
+
+        position: absolute;
+        left: -1.2em;
+        @include media-query($on-palm) {
+            left: auto;
+            right: 0;
+            // background-color: transparent; //just disable
+        }
+
+        @extend %print-hide;
+        
+        @include icon-mask;
+    }
+}
+
+/*
+    Add asterisk to after!
+*/
+.asterisk.asterisk.asterisk {
+    &::after {
+        content: "*";
+        position: absolute;
+        color: var(--color-text-bold);
+
+        @include mode-transition-default;
+
+        //reset
+        background: none;
+        letter-spacing: unset;
+        @include prefix((
+            filter: unset,
+        ), webkit);
+    }
+}
+
+/*
+    External Link Icons
+*/
+a[target="_blank"], 
+a[href^="mailto:"] {
+    &::after {
+        content: "\2197";
+        font-style: normal;
+    }
+
+    figure &::after {
+        content: none;
+    }
+}
+
+/*
+    Dark Mode Prevent Initial Transition
+    Add class preload to body and remove onload
+
+    https://css-tricks.com/transitions-only-after-page-load/
+
+    Associated code in assets/js/theme-toggle.js
+*/
+:root[preload] {
+    body {
+        &, & *, & *::after, & *::before {
+            -webkit-transition: none !important;
+            -moz-transition:    none !important;
+            -ms-transition:     none !important;
+            -o-transition:      none !important;
+            transition:         none !important;
+        }
+    }
+}
+
+/*
+    Dark Mode Switch
+*/
+#theme-toggle {
+    &::after {
+        display: inline-block;
+        width: 1.2em;
+        position: relative;
+        top: 0.25em;
+
+        opacity: 0.3;
+        
+        @include light-mode {
+            content: url("/assets/icon/moon.svg");
+        }
+
+        @include dark-mode {
+            content: url("/assets/icon/sun.svg");
+            @include prefix((
+                filter: invert(1),
+            ), webkit);
+            
+        }
+    }
+
+    @include media-query($on-palm) {
+        display: block;
+        text-align: center;
+        margin-top: su(0.5);
+    }
+
+    @extend %print-hide;
+}
+
+/*
+    Back to Top Button
+    Reference: https://getflywheel.com/layout/sticky-back-to-top-button-tutorial/
+    Use of uppercase Min hack: https://css-tricks.com/when-sass-and-new-css-features-collide/
+*/
+.top-link {
+
+    --iconWidth: 22px;
+    $iw: var(--iconWidth);
+    $w: su(2);
+    
+    position: fixed;
+    display: inline-flex;
+    top: calc( #{$w} - (#{$w} / 2) + 1em);
+
+    $offsetMin: calc( #{su()} * -1.8 );
+    $marginWidthMult: calc(-0.1 * 0.5 * (100vw - var(--max-width)));
+    margin-left: Min( #{$offsetMin} , #{$offsetMin} + #{$marginWidthMult} ); 
+    
+    padding: calc( (#{$w} / 2) - (#{$iw} / 4) ) 
+             calc( (#{$w} / 2) - (#{$iw} / 2) );
+
+    cursor: pointer;
+    background-color: transparent;
+
+    @include media-query($on-) {
+        background-color: var(--color-grey-faint);
+
+        bottom: su();
+        right: su();
+        top: auto;
+        left: auto;
+    }
+
+    @include media-query($on-palm) {
+        padding: calc( (#{$w} / 2 * 0.75) - (#{$iw} / 4) ) 
+                 calc( (#{$w} / 2 * 0.75) - (#{$iw} / 2) );
+    }
+    
+    
+    &.hide {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    svg {
+        width: $iw;
+        height: calc(#{$iw} / 2);
+
+        fill: var(--color-grey-dark);
+        @include mode-transition(fill);
+    }
+    &:hover svg {
+        fill: var(--color-text-link);
+    }
+
+    @include mode-transition(opacity, visibility, color, background-color, padding);
+
+    @extend %print-hide;
+}
+
+/*
+    Discord
+*/
+.discord-link {
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    margin: su(1.5) 
+            auto
+            su(0.5);
+
+    a {
+        font-size: var(--font-size-small);
+        font-family: var(--font-family-code);
+
+        color: var(--color-grey-dark);
+
+        margin: 0 0.5em;
+
+        @include mode-transition-default;
+    }
+
+    &::before, &::after {
+        content: '';
+        flex: 1;
+        border-top: medium dotted var(--color-grey-light);
+        @include mode-transition-default;
+    }
+
+    @extend %print-hide;
+}
+
+/*
+    Image Lightbox
+*/

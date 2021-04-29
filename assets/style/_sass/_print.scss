@@ -1,0 +1,78 @@
+@mixin print-theme {
+    @include light-theme;
+
+    --font-family-serif:    Georgia, serif; 
+
+    --font-size-base:       12pt;
+    --font-size-small:      0.9em;
+
+    $color-text-print-ref:  darken($color-text-base-ref, 25%);
+    --color-text-base:      #{ $color-text-print-ref };
+    --color-text-bold:      #{ $color-text-print-ref };
+         
+    $color-grey-print-ref:  darken($color-grey-ref, 25%);
+    --color-grey:           #{ $color-grey-print-ref };
+    --color-grey-light:     #{ lighten($color-grey-print-ref, 25%) };
+    --color-grey-dark:      #{ darken($color-grey-print-ref, 25%) };
+}
+
+@media print {
+    :root, :root[data-theme] { @include print-theme; }
+
+    @page { 
+        margin: 1cm 
+    }
+
+    a {
+        page-break-inside:avoid;
+
+        // &::after {
+        //     content: "(" attr(href) ")";
+        //     font-family: var(--font-family-code);
+        //     font-size: 0.7em;
+        //     font-weight: 200;
+        //     color: var(--color-grey);
+        // }
+    }
+
+    #{headings(1, 6)} { 
+        page-break-after: avoid; 
+        page-break-inside: avoid;
+    }
+
+    figure {
+        page-break-inside: avoid;
+
+        img  { 
+            page-break-inside: avoid; 
+            page-break-after: avoid; 
+        }
+    }
+    
+    table, 
+    pre { 
+        page-break-inside: avoid; 
+    }
+
+    ul, 
+    ol, 
+    dl { 
+        page-break-before: avoid; 
+    }
+
+
+    /*
+        Story Styling
+    */
+
+    header {
+        margin-top: su();
+    }
+
+    .collection-stories {
+
+        article.chapter {
+            page-break-before: always;
+        }
+    }
+}

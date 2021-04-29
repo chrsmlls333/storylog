@@ -1,0 +1,241 @@
+/*
+    Post and Title Bar
+*/
+
+.site-header {
+    margin-bottom: su(2);
+
+    @at-root .page-blog & {
+        margin-bottom: su(2.5);
+    }
+}
+
+.post-header {
+    margin-bottom: su();
+}
+
+.post-title {
+    font-size: 1.8em;
+    letter-spacing: -1px;
+    line-height: var(--line-height-title);
+    margin-bottom: calc( 0.3em * 0.9 );
+    font-weight: bold;
+
+    a, a:visited {
+        color: var(--color-text-bold);
+    }
+
+    & > * {
+
+        &:after {
+            letter-spacing: 0.8em !important;
+        }
+
+        &.slash:after {
+            background-image: $b64-slash;
+            background-size: unset;
+        }
+    }
+
+    @extend %post-meta-child; 
+}
+
+.site-title {
+    @extend .post-title;
+
+    a, a:visited {
+        color: var(--color-grey);
+    }
+}
+
+// .section-title {
+//     @extend .post-title;
+// }
+
+.post-meta {
+    font-size:   var(--font-size-small);
+    font-family: var(--font-family-code);
+    // line-height: calc( var(--line-height-base) * 1.2 );
+    margin-left: su(0.25);
+
+    &, a, a:visited {
+        color: var(--color-grey);
+    }
+
+    @extend %post-meta-child;
+
+    // .tags *::before {
+    //     content: '#'
+    // }
+}
+
+%post-meta-child {
+
+    & > * {
+        display: inline;
+
+        &:after {
+            content: " ";
+            background: $b64-middot-25px center center no-repeat;
+            
+            letter-spacing: 1em;  
+            background-size: 0.20em;
+
+            @include prefix((
+                filter: brightness(2.2),
+            ), webkit);
+            @include dark-mode {
+                @include prefix((
+                    filter: brightness(1.4),
+                ), webkit);
+            }
+
+            @include mode-transition(filter);
+        }
+
+        @include mode-transition-default;
+    }
+}
+
+.post-nav {
+    font-size:   var(--font-size-small);
+    font-family: var(--font-family-code);
+    color:       var(--color-grey);
+
+    @include mode-transition-default;
+
+    position: relative;
+    display: flex;
+
+    header & {
+        top: calc( var(--line-height-base) * -1.2rem );
+
+        a {
+            position: absolute;
+        }
+    }
+
+    // footer & {
+    // }
+
+    a, a:visited {
+        color: var(--color-grey);
+
+        &.prev {
+            left: 0;
+            margin-right: auto;
+            &::before {
+                content: "< ";
+            }
+        }
+
+        &.next {
+            right: 0;
+            margin-left: auto;
+            &::after {
+                content: " >";
+            }
+        }
+    }
+
+    @extend %print-hide;
+}
+
+.post-disclaimer {
+    @extend .post-content;
+
+    color: var(--color-grey-dark);
+    font-style: italic;
+    
+    a {
+        color: var(--color-text-base)
+    }
+
+    hr {
+        margin: su() auto;
+        border-top-color: var(--color-grey-light);
+    }
+
+    @include mode-transition(color);
+}
+
+.post-endnote {
+    @extend .post-disclaimer;
+
+    margin-top: su(2);
+    margin-bottom: su();
+}
+
+.post-content {
+    margin-bottom: su();
+    margin-left: su(0.25);
+
+    font-weight: normal;
+    line-height: var(--line-height-content);
+    // letter-spacing: -0.01em;
+
+    a {
+        font-weight: bold;
+
+        &:hover {
+            @include prefix((
+                text-decoration: underline solid,
+            ), webkit);
+        }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 1.5em;
+        font-weight: normal;
+    }
+
+    h1,
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h3 {
+        font-size: 1.125em;
+    }
+
+    h4 {
+        font-size: 1.1em;
+    }
+
+    h5,
+    h6 {
+        font-size: 1.05em;
+    }
+
+    hr {
+        margin: su() auto;
+        border-top-color: var(--color-grey-light);
+
+        @media print {
+            visibility: visible;
+        }
+    }
+    
+    .footnotes {
+        text-shadow: unset;
+    }
+
+    @extend %overflow-wrap;
+}
+
+.chapter-content {
+    @extend .post-content;
+
+    > p + p {
+        text-indent: 3ch;
+    }
+}
+
+footer {
+    margin-bottom: su();
+}

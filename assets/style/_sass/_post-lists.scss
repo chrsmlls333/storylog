@@ -1,0 +1,191 @@
+.post-list {    
+    margin-left: su(0.25);
+    margin-right: su(0.25);
+
+    > li {
+        position: relative;
+        list-style-type: none;
+
+        > * {
+            &:first-child {
+                position: relative;
+            }
+        }
+
+        a, %link-ish {
+            color: var(--color-text-bold);
+            font-weight: normal;
+            font-weight: bold;
+
+            @include prefix((
+                text-decoration-line: none,
+            ), webkit);
+            
+            &:hover {
+                @include prefix((
+                    text-decoration-line: underline,
+                ), webkit);
+                
+            }
+        }
+
+        .list-meta {
+            @extend %post-meta-child;
+
+            font-size: var(--font-size-small);
+            font-family: var(--font-family-code);
+
+            color: var(--color-grey-dark);
+
+            @include mode-transition-default;
+        }
+
+        > * + * {
+            margin-left: su(0.25);
+
+            @include media-query($on-palm) {
+                display: block;
+            }
+        }
+
+        @include media-query($on-palm) {
+            margin-bottom: su(0.333);
+            width: 100%;
+        }
+    }
+}
+
+.list-heading {
+    font-style: italic;
+    font-weight: bold;
+    color: var(--color-grey);
+    margin-bottom: 0;
+
+    @include mode-transition(color);
+}
+
+.index-list {
+    @extend .post-list;
+
+    > li {
+
+        &.posts {
+            a, a:visited {
+                color: var(--color-grey-dark);
+            }
+        }
+    }
+}
+
+.contents-list { //unused
+    @extend .post-list;
+
+    > li {
+
+        &::before {
+            @extend .icon;
+            content: '\21AA';
+        }
+    }
+}
+
+.part-list {
+    @extend .post-list;
+
+    margin-right: 0;
+
+    ul, ol {
+        margin-left: 0;
+        margin-bottom: su(0.5);
+    }
+
+    .collection-stories & {
+        @extend %print-only;
+    }
+}
+
+.chapter-list {
+    @extend .post-list;
+
+    margin-right: 0;
+}
+
+.leader-list-old {
+    overflow-x: hidden;
+
+    > li {
+        clear: both;
+
+        &:before {
+            float: left;
+            width: 0;
+            white-space: nowrap;
+            color: var(--color-grey-light);
+            content: ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ";
+            
+            @include mode-transition-default;
+        }
+
+        > :first-child {
+            padding-right: 0.33em;
+            // background-color: var(--color-background);
+        }
+
+        * + * {
+            padding-left: 0.33em;
+            // background-color: var(--color-background); // does not transition properly
+
+            float: right;
+            line-height: calc(var(--line-height-base) / 0.8);
+
+            @include media-query($on-palm) {
+                float: none;
+            }
+        }
+    }
+}
+
+.leader-list {
+    @extend .post-list;
+
+    > li {
+        display: table;
+        position: relative;
+
+        > * {
+            display: table-cell;
+            @include media-query($on-palm) {
+                display: block;
+            }
+            
+            &:first-child {
+                position: relative;
+                overflow: hidden;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    bottom: 0.5em;
+                    margin-left: 0.1em;
+                    width: 100%;
+                    border-bottom: medium dotted var(--color-grey-light);
+
+                    @include mode-transition-default;
+
+                    @include media-query($on-palm) {
+                        content: none;
+                    }
+                }
+            }
+        }
+
+        > * + * {
+            white-space: nowrap;
+            text-align: right;
+            width: 0.1%;
+            vertical-align: bottom; //drop
+            padding-bottom: 0.2em;  //lift
+            padding-left: 0.33em;
+        }
+    }
+}
