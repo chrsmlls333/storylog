@@ -1,0 +1,41 @@
+{%- comment -%} Post Lists {%- endcomment -%}
+{% assign parts = include.chapters | group_by: 'part' %}
+
+{% assign i = 1 %}
+<ol class="part-list">
+
+  {% for part in parts %}
+  <li>
+
+    {% unless parts.size > 1 and part.items.size == 1 and part.name == part.items[0].entry %}
+      <h4 class="list-heading">{{ part.name }}</h4>
+    {% endunless %}
+
+    <ol class="chapter-list" start="{{ i }}">
+
+      {% for chapter in part.items %}
+      {% assign i = i | plus: 1 %}
+      <li class="{%- include illustrated-tag.html post=chapter -%}">
+
+        {% if chapter.series == chapter.entry %}
+          <a class="chapter-title" href="{{ story.url | prepend: site.baseurl }}">Read the Story...</a>
+        {% else %}
+          <a class="chapter-title" href="{{ chapter.url | prepend: site.baseurl }}">{{ chapter.entry }}</a>
+        {% endif %}
+
+        <!-- <span class="list-meta">{{ chapter.content | number_of_words }} words</span> -->
+        <!-- <time class="list-meta" datetime="{{ chapter.date | date_to_xmlschema }}">{{ chapter.date | date: "%b %d, %Y" }}</time> -->
+
+        {% if chapter.description %}
+          <span class="list-meta">{{ chapter.description }}</span>
+        {% endif %}
+
+      </li>
+      {% endfor %}
+
+    </ol>
+
+  </li>
+  {% endfor %}
+
+</ol>

@@ -1,0 +1,9 @@
+<footer class="site-footer">
+  <span class="copyright"><span>&copy; {{ site.time | date: '%Y' }}</span>&nbsp;<a href="{% link _pages/index.html %}">{{ site.title }}</a></span>
+  <span class="contact"><a href="mailto:{{ site.email }}">Contact</a></span>
+  {% if site.discord %}
+    <span class="discord"><a href="{{ site.discord }}">Discord</a></span> 
+  {% endif %}
+  {%- comment -%}<span><a href="{% link _pages/feed.xml %}">RSS</a></span>{%- endcomment -%}
+  <span><a id="theme-toggle"></a></span>
+</footer>

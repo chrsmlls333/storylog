@@ -1,0 +1,4 @@
+{%- comment -%} Fallback to page date {%- endcomment -%}
+{%- assign post = page -%}
+{%- if include.post -%}{%- assign post = include.post -%}{%- endif -%}
+{%- if post.tags contains 'illustrated' -%}illustrated{%- endif -%}

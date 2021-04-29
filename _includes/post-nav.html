@@ -1,0 +1,69 @@
+{% if page.collection == 'chapters' and page.series %}
+
+  {%- comment -%} Handle Story Chapters Nav {%- endcomment -%}
+
+  {% assign chapters = site.chapters | where: 'series', page.series %}
+  {% for item in chapters %}
+    {% if item.title == page.title %}
+      {% assign index = forloop.index0 %}
+      {% break %} 
+    {% endif %}
+  {% endfor %}
+
+  {% assign previndex = index | minus: 1 %}
+  {% if previndex >= 0 %}
+    {% assign pre = chapters[previndex] %}
+  {% endif %}
+  {% assign nextindex = index | plus: 1 %}
+  {% assign nex = chapters[nextindex] %}
+
+  {% if pre.url or nex.url %}
+    <div class="post-nav">
+      {% if pre.url %}
+        <a class="prev" href="{{ pre.url }}">
+          {% if page.part != pre.part %} 
+            <span>{{ pre.part }}</span>  
+          {% else %}
+            <span>{{ pre.entry }}</span>
+          {% endif %}
+        </a>
+      {% endif %} 
+
+      {% if nex.url %}
+        <a class="next" href="{{ nex.url }}">
+          {% if page.part != nex.part %} 
+            <span>{{ nex.part }}</span>  
+          {% else %}
+            <span>{{ nex.entry }}</span>
+          {% endif %}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% elsif page.is_post %}
+
+  {%- comment -%} Handle Blog Post Nav {%- endcomment -%}  
+  
+  {% if page.previous.url or page.next.url %}
+    <div class="post-nav">
+      {% if page.previous.url %}
+        <a class="prev" href="{{ page.previous.url }}">
+          <!-- {{ page.previous.title }} -->
+          Previous
+        </a>
+      {% else %}  
+        <a class="prev" href="{% link _pages/blog.html %}">Back to Blog</a>
+      {% endif %} 
+
+      {% if page.next.url %}
+        <a class="next" href="{{ page.next.url }}">
+          <!-- {{ page.next.title }} -->
+          Next
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+{% endif %}
+

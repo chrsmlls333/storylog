@@ -1,0 +1,19 @@
+{%- comment -%} Fallback to page date {%- endcomment -%}
+{%- assign post = page -%}
+{%- if include.post -%}{%- assign post = include.post -%}{%- endif -%}
+
+{%- if post.collection == "stories" -%} 
+  {%- comment -%} Stories {%- endcomment -%}
+  {% assign postdate = post.date_last %}
+{%- else -%} 
+  {%- comment -%} Posts and Chapters {%- endcomment -%}
+  {%- assign postdate = post.date -%}
+{%- endif -%}
+
+{%- if include.shorten == true -%}
+  {%- assign displaydate = postdate | date: '%b %d' -%}
+{%- else -%}
+  {%- assign displaydate = postdate | date: '%b %d, %Y' -%}
+{%- endif -%}
+
+<time datetime="{{ postdate | date_to_xmlschema }}" itemprop="datePublished">{{ displaydate | strip }}</time>

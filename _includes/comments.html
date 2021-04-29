@@ -1,3 +1,4 @@
+{%- comment -%} DISQUS {%- endcomment -%}
 {% if site.disqus_shortname %}
   <div id="disqus_thread"></div>
   <script type="text/javascript">
@@ -9,4 +10,17 @@
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
+{% endif %}
+
+{%- comment -%} COMMENTO {%- endcomment -%}
+{% if false %}
+  <script defer src="https://cdn.commento.io/js/commento.js"></script>
+  <div id="commento"></div>
+{% endif %}
+
+{%- comment -%} DISCORD {%- endcomment -%}
+{% if site.discord %}
+  <section class="discord-link">
+    <a href="{{ site.discord }}">Discuss over on the Discord</a>
+  </section>
 {% endif %}

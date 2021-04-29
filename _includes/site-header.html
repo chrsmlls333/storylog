@@ -1,0 +1,21 @@
+<header class="site-header">
+  <h1 class="site-title">
+		{% assign pages_list = site.pages | where: "nav", true | sort: "order" %}
+      
+      {%- comment -%} Loop through nav: true pages {%- endcomment -%}
+      {% for p in pages_list %}
+         <span {% if forloop.first %}class="slash"{% endif %}>
+            {%- if page.url == p.url -%}
+               {{ p.title }}
+            {%- else -%}
+               <a href="{{ p.url }}">{{ p.title }}</a>
+            {%- endif -%}
+         </span>
+      {% endfor %}
+
+      {%- comment -%} Add title if not in nav list {%- endcomment -%}
+      {% if page.nav == false %}
+         <span>{{ page.title }}</span>
+      {% endif %}
+  </h1>
+</header>

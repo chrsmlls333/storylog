@@ -1,0 +1,26 @@
+{%- comment -%} Fallback to page date {%- endcomment -%}
+{%- assign post = page -%}
+{%- if include.post -%}{%- assign post = include.post -%}{%- endif -%}
+
+
+{%- if post.collection == "stories" -%} 
+  
+  {%- assign earliestYear = story.date_first | date: "%Y" -%}
+  {%- assign latestYear   = story.date_last  | date: "%Y" -%}
+
+  {%- assign displaydate = earliestYear -%}
+  {%- if earliestYear != latestYear -%}
+    {%- assign displaydate = displaydate | append: '&#8211;' -%}
+    {%- assign displaydate = displaydate | append: latestYear -%}
+  {%- endif -%}
+  {%- unless story.complete -%}
+    {%- assign displaydate = displaydate | append: ' (In Progress)' -%}
+  {%- endunless -%}
+
+  <time datetime="{{ story.date_last | date_to_xmlschema }}" itemprop="datePublished">{{ displaydate }}</time>
+
+{%- else -%} 
+  
+  <time>0000</time>
+
+{%- endif -%}

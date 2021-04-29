@@ -1,10 +1,26 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title %}{{ " - " | prepend: page.title }}{% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
-  <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | prepend: site.url }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+
+  <title>{% if page.title and page.url != '/' %}{{ " &middot; " | prepend: page.title }}{% endif %}{{ site.title }}</title>
+  
+  <!-- <meta name="description" content="{{ site.description }}"> -->
+  <meta name="copyright" content="{{ site.author }} {{ site.time | date: '%Y' }}. All Rights Reserved.">
+  
+  <link rel="icon" href="{% link /assets/icon/favicon.ico %}" type="image/x-icon" />
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{% link _pages/feed.xml %}">
+
+  <link rel="stylesheet" href="{{ '/assets/style/main.css' | prepend: site.baseurl }}">
+  {% if page.css %}
+  <link rel="stylesheet" href="{{ '/assets/style/' | append: page.css | prepend: site.baseurl }}">
+  {% endif %}
+
+  <script src="{% link /assets/js/theme-toggle.js %}"></script>
+  <script src="{% link /assets/js/remove-missing-id-links.js %}"></script>
+ 
+  {% seo title=false %}
+
+  {% include google_analytics.html %}
 </head>

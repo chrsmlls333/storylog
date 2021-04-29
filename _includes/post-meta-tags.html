@@ -1,0 +1,56 @@
+
+{%- comment -%} Fallback to page tags {%- endcomment -%}
+{% assign post = page %}
+{% if include.post %}{% assign post = include.post %}{% endif %}
+
+{% assign rawtags = "" %}
+
+{%- comment -%} Handle Stories Fullpage {%- endcomment -%}
+{% if post.collection == 'stories' %}
+  
+{% endif %}
+
+{%- comment -%} Handle Stories Collection Series {%- endcomment -%}
+{% if post.collection == 'chapters' and post.series %}
+  {% assign story = site.stories | find: "title", post.series %}
+  {% if story.tags.size > 0 %}
+    {% assign ttags = story.tags | join:'|' | append:'|' %}
+    {% assign rawtags = rawtags | append: ttags %}
+  {% endif %}
+{% endif %}
+
+{%- comment -%} Handle normal tags {%- endcomment -%}
+{% if post.tags.size > 0 %}
+  {% assign ttags = post.tags | join:'|' | append:'|' %}
+  {% assign rawtags = rawtags | append: ttags %}
+{% endif %}
+
+{%- comment -%} Dedupe Tags {%- endcomment -%}
+{% assign rawtags = rawtags | split:'|' %}
+{%- comment -%}
+{% assign rawtags = rawtags | sort_natural %}
+{%- endcomment -%}
+{% assign tags = "" %}
+{% for tag in rawtags %}
+  {% if tag != "" %}
+    {% if tags == "" %}
+      {% assign tags = tag | split:'|' %}
+    {% endif %}
+    {% unless tags contains tag %}
+      {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{%- comment -%} Construct HTML Tags Array {%- endcomment -%}
+{% if tags.size > 0 %}
+  {% assign tags_content = "" %}
+  {% for post_tag in tags %}
+    {% capture tags_content_temp %}
+      {{ tags_content }}
+      <li><a class="tag" href="{% link _pages/tags.html %}#{{ post_tag | slugify: "pretty" }}">#{{ post_tag }}</a></li>
+    {% endcapture %}
+    {% assign tags_content = tags_content_temp %}
+  {% endfor %}
+  {{ tags_content }}
+{% endif %}
