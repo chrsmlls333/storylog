@@ -1,0 +1,58 @@
+---
+layout: default
+title: Blog
+permalink: /posts
+nav: true
+order: 2
+---
+
+{% include site-header.html %}
+
+{% for post in site.posts %}
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title" itemprop="name headline">
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </h1>
+
+    <ul class="post-meta">
+
+      {%- comment -%} Post Date {%- endcomment -%}
+      <li>{%- include post-time.html post=post shorten=true -%}</li>
+      
+      {%- comment -%} Author {%- endcomment -%}
+      {%- comment -%}
+      {% if post.author %} 
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ post.author }}</span></span>
+      {% endif %}
+      {%- endcomment -%}
+
+      {% comment %} Tags {% endcomment %}
+      {% include post-meta-tags.html post=post %}
+
+      {%- comment -%} Comments Link {%- endcomment -%}
+      {% if post.comment %}
+        <li><a href="{{ site.discord }}">Comment</a></li>
+      {% endif %}
+
+    </ul>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    {{ post.excerpt }}
+    {% if post.content != post.excerpt %}
+      {% capture read %}Read more{% if post.content contains "<img" %} and see the artwork{% endif %}...{% endcapture %}
+      <p><a href="{{ post.url }}">{{ read }}</a></p>
+    {% endif %}
+  </div>
+  
+</article>
+
+<hr>
+{% endfor %}
+
+{%- comment -%} Top Button {%- endcomment -%}
+{% include top-button.html %}

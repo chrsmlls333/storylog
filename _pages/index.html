@@ -1,19 +1,57 @@
 ---
 layout: default
+title: Storylog
+permalink: /
+nav: true
+order: 0
+
+intro: |
+  John Doe is a writer. Duis imperdiet lacus non nibh facilisis, in interdum nibh finibus. Etiam tempor risus vel varius.
+  
+  Nam sagittis, ex sit amet convallis maximus, arcu nisl accumsan mauris, quis ornare erat tellus sit amet turpis. Curabitur pulvinar consectetur ante quis vulputate. Ut semper nunc lacus, id maximus felis vulputate et. Pellentesque et.
+
+adult_warning: |
+  Things you should know in this disclaimer!
+
+  Donec diam leo, vestibulum et nunc at, accumsan semper lectus. Aenean varius cursus ante. Curabitur massa mauris, rhoncus ut porttitor at, commodo nec lorem. Praesent quis quam bibendum, scelerisque elit quis, mollis nulla. Donec non.
+
+  Phasellus scelerisque, ipsum sit amet volutpat elementum, massa elit finibus justo, sed dignissim metus tortor vel elit. Maecenas ut eros malesuada diam rutrum scelerisque. Nunc rutrum odio sit amet massa bibendum posuere. Ut felis massa.
+
 ---
-<div class="home">
-	<section class="site-header">
-		<h1 class="smallcap"><a class="site-title" href="{{ '/' | prepend: site.baseurl | prepend: site.url }}">{{ site.title }}</a></h1>
-		{% include nav.html %}
-		{% include intro.html %}
-	</section>
-	<section>
-		<ul class="post-list">
-			{% for post in site.posts %}
-			<li>
-				<a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">{{ post.title }}</a> <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
-			</li>
-			{% endfor %}
-		</ul>
-	</section>
-</div>
+
+{% include site-header.html %}
+
+<section class="site-intro">
+	<!-- <h2>About the Author</h2> -->
+	{{ page.intro | markdownify }}
+</section>
+
+<section class="box-section">
+	<!-- <h2 class="section-title">Latest Updates</h2> -->
+	<ul class="index-list leader-list">
+		{% assign chapters = site.chapters | concat: site.posts | sort: 'date' | reverse %}
+		{% for chapter in chapters limit: 10 %}
+    	<li class="{{ chapter.collection }} {% include illustrated-tag.html post=chapter %}">
+			{% assign title = chapter.title %}
+			{% if chapter.is_post %}
+				{% assign title = title | prepend: 'Blog &middot; ' %}
+			{% endif %}
+
+			<a href="{{ chapter.url | prepend: site.baseurl }}">{{ title }}</a> 
+			<span class="list-meta">{% include post-time.html post=chapter shorten=true %}</span>
+		</li>
+		{% endfor %}
+		<!-- <li>
+			<span>...</span>
+		</li> -->
+	</ul>
+</section>
+
+<!-- <hr> -->
+
+<section class="adult-warning">
+  <!-- <h2>Content Warning</h2> -->
+  {{ page.adult_warning | markdownify }}
+</section>
+
+

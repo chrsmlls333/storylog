@@ -1,0 +1,68 @@
+---
+layout: default
+title: Tags
+permalink: /tags
+nav: false
+order: 4
+
+intro: |
+  You've found yourself on the tags page. You can customize this text!
+
+---
+
+{% assign allposts = site.posts | concat: site.stories %}
+
+{% assign rawtags = "" %}
+{% for post in allposts %}
+	{% assign ttags = post.tags | join:'|' | append:'|' %}
+	{% assign rawtags = rawtags | append:ttags %}
+{% endfor %}
+{% assign rawtags = rawtags | split:'|' | sort %}
+
+{% assign tags = "" %}
+{% for tag in rawtags %}
+	{% if tag != "" %}
+		{% if tags == "" %}
+			{% assign tags = tag | split:'|' %}
+		{% endif %}
+		{% unless tags contains tag %}
+			{% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
+		{% endunless %}
+	{% endif %}
+{% endfor %}
+
+{%- comment -%} Begin Content {%- endcomment -%}
+
+{% include site-header.html %}
+
+<section>
+	<!-- <h2>About the Author</h2> -->
+	{{ page.intro | markdownify }}
+</section>
+
+{% for tag in tags %}
+	<section>
+		<h2 class="tag-title" id="{{ tag | slugify: "pretty" }}">{{ tag }}</h2>
+		<ul class="post-list leader-list">
+			{% for post in allposts %}
+				{% if post.tags contains tag %}
+					{% assign title = post.title %}
+					{% assign url = post.url %}
+					{% if post.collection == "stories" %}
+						{% assign url = post.title | slugify | prepend: '/stories#' %}
+					{% endif %}
+					{% if post.collection == "chapters" %}
+						{%- comment -%} Should already be made in title {%- endcomment -%}
+					{% endif %}
+					<li>
+						<a href="{{ url | prepend: site.baseurl }}">{{ title }}</a> 
+						<span class="list-meta">{% include post-time.html post=post shorten=false %}</span>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</section>
+{% endfor %}
+
+{%- comment -%} Top Button {%- endcomment -%}
+{% include top-button.html %}
