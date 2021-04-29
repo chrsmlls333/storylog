@@ -1,21 +1,95 @@
-# Site settings
-title: "TextLog"
-description: "Minimalist Jekyll theme for documentation site"
-baseurl: "/textlog" # required if used under gh-pages branch, else (under master branch) just leave empty/blank
-url: ""
-author: "John Doe"
+# Basics ##############################################
+title:        "StoryLog"
+description:  >-
+  Minimalist Jekyll theme for a writer's site
+baseurl:      "/storylog" # required if used under gh-pages branch, else (under master branch) just leave empty/blank
+url:          ""
+author:       "John Doe"
+email:        ""
 
-# Build settings
+# Build settings ######################################
+host:         127.0.0.1
+port:         4000
+destination:  ./_site
+
+exclude: 
+  - 'LICENSE'         #License
+  - 'README.md'       #Documentation
+  - 'CNAME'           #URL Pointer
+  - 'Gemfile'         #Ruby Packagelist
+  - 'Gemfile.lock'    #Ruby Packagelist
+  - '/vendor'         #Ruby Bundler Packages
+  - '.bundle/config'  #Ruby Bundler Config
+  - '/script'         #Utility Folder
+
+include:
+  - '_pages'          #Organizational hack
+
 kramdown:
   input: GFM
-permalink: pretty
 
-# Third-party services
+sass:
+  sass_dir: assets/style/_sass
+  style: compact
+
+
+# Posts #############################################
+future: true
+permalink: /posts/:year-:month-:day #-:title
+
+collections_dir: content
+
+collections:
+  stories:
+    output: true
+    permalink: /stories/full/:title
+  chapters:
+    output: true
+    permalink: /stories/chapters/:title
+
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      author: 'John Doe'
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: page
+      nav: false
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+      comment: true
+      is_post: true
+      excerpt_separator: <!--more-->
+  -
+    scope:
+      path: ""
+      type: "stories"
+    values:
+      layout: fullstory
+      type: ""
+      comment: true
+  -
+    scope:
+      path: ""
+      type: "chapters"
+    values:
+      layout: chapter
+      comment: false
+
+imagepath: '/assets/images/'
+
+# Third-party services ##################################
 # just leave empty to disable it
 google_analytics:
 disqus_shortname: 
-
-plugins:
-  - jekyll-sitemap
-
-exclude: ["LICENSE", "README.md", "CNAME", "vendor", "Gemfile", "script"]
+discord:

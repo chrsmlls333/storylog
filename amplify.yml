@@ -1,0 +1,19 @@
+version: 1
+env:
+  variables:
+    JEKYLL_ENV: production
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - bundle install --path vendor/bundle
+    build:
+      commands:
+        - bundle exec jekyll b
+  artifacts:
+    baseDirectory: _site
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - 'vendor/**/*'
