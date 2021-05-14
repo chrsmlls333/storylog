@@ -6,7 +6,7 @@ Storylog is a minimalist, middle-running Jekyll theme designed for a writer's we
 
 Based on [Textlog](https://github.com/heiswayi/textlog) by [Heiswayi Nrird](https://github.com/heiswayi)
 
-[Amplify Demo](https://gh-pages.d3l2hvqu0x0axr.amplifyapp.com/)
+[Amplify Demo](https://source.d3l2hvqu0x0axr.amplifyapp.com/)
 
 ![SCREENSHOT](https://via.placeholder.com/250)
 
