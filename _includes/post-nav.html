@@ -64,6 +64,18 @@
       {% endif %}
     </div>
   {% endif %}
-  
+
+{% elsif page.title == "Stories" %}
+  {%- assign story = include.story -%}
+  <div class="post-nav">
+    <a class="upward" onclick="topButton.scrollToTop(this)">
+      <span>See all stories...</span>
+    </a>
+
+    <!-- <span class="next" href="#">
+      Next
+    </span> -->
+  </div>
+
 {% endif %}
 

@@ -6,6 +6,8 @@
     --font-size-base:       12pt;
     --font-size-small:      0.9em;
 
+    --color-background:     white;
+
     $color-text-print-ref:  darken($color-text-base-ref, 25%);
     --color-text-base:      #{ $color-text-print-ref };
     --color-text-bold:      #{ $color-text-print-ref };

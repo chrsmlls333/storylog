@@ -16,10 +16,12 @@
 
 .post-title {
     font-size: 1.8em;
-    letter-spacing: -1px;
+    letter-spacing: 0px;
     line-height: var(--line-height-title);
     margin-bottom: calc( 0.3em * 0.9 );
-    font-weight: bold;
+
+    font-weight: 500;
+
 
     a, a:visited {
         color: var(--color-text-bold);
@@ -27,8 +29,20 @@
 
     & > * {
 
+        font-style: italic;
+
         &:after {
-            letter-spacing: 0.8em !important;
+            letter-spacing: 1ch !important;
+        }
+
+        &.home {
+            font-style: normal;
+            // font-size: 1.4em;
+
+            &:after {
+                position: relative;
+                top: 0.1em;
+            }
         }
 
         &.slash:after {
@@ -93,7 +107,7 @@
             @include mode-transition(filter);
         }
 
-        @include mode-transition-default;
+        @include mode-transition();
     }
 }
 
@@ -102,7 +116,7 @@
     font-family: var(--font-family-code);
     color:       var(--color-grey);
 
-    @include mode-transition-default;
+    @include mode-transition();
 
     position: relative;
     display: flex;
@@ -112,24 +126,44 @@
 
         a {
             position: absolute;
+            width: max-content;
+        }
+    }
+
+    .page-stories & {
+        display: none;
+
+        top: calc( var(--line-height-base) * 1.2rem );
+        position: absolute;
+    }
+
+    .page-stories article:target & {
+        @include media-query($on-) {
+            display: flex;
         }
     }
 
     // footer & {
     // }
 
-    a, a:visited {
+    a, a:visited, span {
         color: var(--color-grey);
 
-        &.prev {
-            left: 0;
-            margin-right: auto;
-            &::before {
-                content: "< ";
-            }
+        left: 0;
+        margin-right: auto;
+
+        &.upward::before {
+            content: 'ᐱ ';
+        }
+
+        &.prev::before {
+            content: "< ";
         }
 
         &.next {
+            left: unset;
+            margin-right: unset;
+
             right: 0;
             margin-left: auto;
             &::after {
@@ -166,6 +200,10 @@
     margin-bottom: su();
 }
 
+.post-subcontainer {
+    margin-left: su(0.25);
+}
+
 .post-content {
     margin-bottom: su();
     margin-left: su(0.25);
@@ -175,7 +213,7 @@
     // letter-spacing: -0.01em;
 
     a {
-        font-weight: bold;
+        font-weight: 500;
 
         &:hover {
             @include prefix((
@@ -205,6 +243,9 @@
 
     h4 {
         font-size: 1.1em;
+
+        text-align: center;
+        font-style: italic;
     }
 
     h5,
@@ -220,9 +261,27 @@
             visibility: visible;
         }
     }
+
+    $footnotes-separation: su(3);
+    p:last-of-type + hr {
+        margin-top: $footnotes-separation;
+    }
     
     .footnotes {
+        font-size: var(--font-size-small);
         text-shadow: unset;
+
+        border-top: medium dotted var(--color-grey-light);
+        margin-top: $footnotes-separation;
+        padding-top: su();
+
+        @include mode-transition(border-top-color);
+    }
+
+    hr + .footnotes {
+        border-top: unset;
+        margin-top: unset;
+        padding-top: unset;
     }
 
     @extend %overflow-wrap;

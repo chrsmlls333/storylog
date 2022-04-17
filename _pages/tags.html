@@ -2,34 +2,20 @@
 layout: default
 title: Tags
 permalink: /tags
-nav: false
-order: 4
-
-intro: |
-  You've found yourself on the tags page. You can customize this text!
-
+nav: true
+order: 5
 ---
 
-{% assign allposts = site.posts | concat: site.stories %}
+{%- comment -%} Collect Tags {%- endcomment -%}
 
-{% assign rawtags = "" %}
+{% assign allposts = site.posts | concat: site.stories | concat: site.chapters %}
+
+{% assign rawtags = '' | split: '' %}
 {% for post in allposts %}
-	{% assign ttags = post.tags | join:'|' | append:'|' %}
-	{% assign rawtags = rawtags | append:ttags %}
+	{% assign rawtags = rawtags | concat: post.tags %}
 {% endfor %}
-{% assign rawtags = rawtags | split:'|' | sort %}
+{% assign tags = rawtags | sort | uniq | fm_custom_sort %}
 
-{% assign tags = "" %}
-{% for tag in rawtags %}
-	{% if tag != "" %}
-		{% if tags == "" %}
-			{% assign tags = tag | split:'|' %}
-		{% endif %}
-		{% unless tags contains tag %}
-			{% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
-		{% endunless %}
-	{% endif %}
-{% endfor %}
 
 {%- comment -%} Begin Content {%- endcomment -%}
 
@@ -37,32 +23,57 @@ intro: |
 
 <section>
 	<!-- <h2>About the Author</h2> -->
-	{{ page.intro | markdownify }}
+	{{ site.data.text.tags.intro | markdownify }}
 </section>
 
+<section class="tag-list-section">
+	<ul class="tag-list">
+		{% for tag in tags %}
+			{% assign id = tag | slugify_cased: "pretty" %}
+			{% assign count = allposts | where_exp: "p", "p.tags contains tag" | size %}
+			<li>
+				<a class="tag" id="{{ id }}-link" data-tag="{{ tag }}" href="#{{ id }}">
+					{{ tag }}<span class="post-meta">{{ count }}</span>
+				</a>
+			</li>
+		{% endfor %}
+		<li>
+			<a onclick="accordion.toggle(this, 'tag-group-section'); this.parentElement.classList.toggle('active');">show all...</a>
+		</li>
+		{% for num in (1..16) %}
+			<li class="flexfiller" aria-hidden="true"></li>
+		{% endfor %}
+	</ul>
+</section>
+
+<section id="tag-group-section" class="tag-group-section">
 {% for tag in tags %}
-	<section>
-		<h2 class="tag-title" id="{{ tag | slugify: "pretty" }}">{{ tag }}</h2>
+	<div class="tag-group" id="{{ tag | slugify_cased: "pretty" }}" data-tag="{{ tag }}">
+		<h2 class="tag-title" data-tag="{{ tag }}">{{ tag }}</h2>
 		<ul class="post-list leader-list">
 			{% for post in allposts %}
 				{% if post.tags contains tag %}
 					{% assign title = post.title %}
 					{% assign url = post.url %}
 					{% if post.collection == "stories" %}
-						{% assign url = post.title | slugify | prepend: '/stories#' %}
+						{% assign url = post.title | replace: "'", "" | slugify | prepend: '/stories#' %}
 					{% endif %}
 					{% if post.collection == "chapters" %}
 						{%- comment -%} Should already be made in title {%- endcomment -%}
 					{% endif %}
-					<li>
+					{% if post.is_post %}
+						{% assign title = title | prepend: 'Blog &middot; ' %}
+					{% endif %}
+					<li class="{{ post.collection }} {% include illustrated-tag.html post=post %}">
 						<a href="{{ url | prepend: site.baseurl }}">{{ title }}</a> 
 						<span class="list-meta">{% include post-time.html post=post shorten=false %}</span>
 					</li>
 				{% endif %}
 			{% endfor %}
 		</ul>
-	</section>
+	</div>
 {% endfor %}
+</section>
 
 {%- comment -%} Top Button {%- endcomment -%}
 {% include top-button.html %}

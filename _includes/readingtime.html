@@ -1,0 +1,22 @@
+{%- capture totalwords -%}
+    {%- include wordcount.html story=include.story chapters=include.chapters post=include.post raw=true -%}
+{%- endcapture -%}
+{%- assign wpm = 200.0 -%}
+{%- assign minutes_raw = totalwords | divided_by: wpm -%}
+{%- assign minutes = minutes_raw | floor | modulo: 60 -%}
+{%- assign hours_raw = minutes_raw | floor | divided_by: 60.0 -%}
+{%- assign hours = hours_raw | floor -%}
+
+{%- if include.raw -%}
+    {{ hours }}h {{ minutes | at_least: 1 }}m
+{%- elsif hours_raw > 1 -%}
+    {%- assign quantize = 0.5 -%}
+    {{- hours_raw | divided_by: quantize | floor | times: quantize | remove: ".0" | pluralize: 'hour' -}}
+{%- else -%}
+    {%- if minutes > 15 -%}
+        {%- assign quantize = 5.0 -%}
+    {% else %}
+        {%- assign quantize = 1.0 -%}
+    {%- endif -%}
+    {{- minutes | divided_by: quantize | round | times: quantize | at_least: 1 | pluralize: 'minute' -}}
+{%- endif -%}

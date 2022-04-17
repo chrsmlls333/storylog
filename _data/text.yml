@@ -1,0 +1,15 @@
+index:
+  intro: |
+    John Doe is a writer. Duis imperdiet lacus non nibh facilisis, in interdum nibh finibus. Etiam tempor risus vel varius.
+    
+    Nam sagittis, ex sit amet convallis maximus, arcu nisl accumsan mauris, quis ornare erat tellus sit amet turpis. Curabitur pulvinar consectetur ante quis vulputate. Ut semper nunc lacus, id maximus felis vulputate et. Pellentesque et.
+
+  adult_warning: |
+    Things you should know in this disclaimer!
+
+    Donec diam leo, vestibulum et nunc at, accumsan semper lectus. Aenean varius cursus ante. Curabitur massa mauris, rhoncus ut porttitor at, commodo nec lorem. Praesent quis quam bibendum, scelerisque elit quis, mollis nulla. Donec non.
+
+    Phasellus scelerisque, ipsum sit amet volutpat elementum, massa elit finibus justo, sed dignissim metus tortor vel elit. Maecenas ut eros malesuada diam rutrum scelerisque. Nunc rutrum odio sit amet massa bibendum posuere. Ut felis massa.
+tags:
+  intro: >
+    You've found yourself on the tags page. You can customize this text!

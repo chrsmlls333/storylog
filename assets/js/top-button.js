@@ -1,4 +1,4 @@
-(function() {
+var topButton = (function() {
 
   /**
    * @description Trigger to scroll up
@@ -12,8 +12,6 @@
   let hasScrolled = false
 
   // FUNCTIONS //////////////////////////////////////////////////////////////////////////////////////
-
-  const scrollFunc = () => { hasScrolled = true }
 
   const checkVisibility = () => {
     if (!hasScrolled) return;
@@ -38,7 +36,7 @@
 
 
   const scrollToTop = (e) => {
-    e.preventDefault();
+    if (e && e.originalEvent instanceof Event) e.preventDefault();
     scroll({
       top: 0,
       behavior: "smooth"
@@ -46,12 +44,16 @@
   };
 
 
-  // EVENTS //////////////////////////////////////////////////////////////////////////////////////////
+  // EVENTS ///////////////////////////////////////////////////////
 
-  window.addEventListener("scroll", scrollFunc);
+  window.addEventListener("scroll", function() { hasScrolled = true });
 
   setInterval(checkVisibility, 300)
 
   scrollToTopButton.addEventListener("click", scrollToTop);
+  
 
+  // EXPOSE ///////////////////////////////////////////////////////
+
+  return { scrollToTop }
 })()

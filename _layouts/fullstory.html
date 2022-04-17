@@ -15,8 +15,8 @@ layout: default
       {% assign stories_page = site.pages | find: "title", "Stories" %}
       {% assign home = site.pages | find: "url", "/" %}
 
-      <span class="slash"><a href="{{ stories_page.url }}#{{ story.title | slugify }}">{{ stories_page.title }}</a></span>
-      <!-- <span class="slash"><a href="{{ stories_page.url }}">{{ stories_page.title }}</a></span> -->
+      {%- assign href = story.title | replace: "'", "" | slugify | prepend: '#' | prepend: stories_page.url -%}
+      <span class="slash"><a href="{{ href }}" title="Go back to the Stories page...">{{ stories_page.title }}</a></span>
       <span>{{ story.title }}</span>
 
     </h1>
@@ -33,16 +33,26 @@ layout: default
 
       {%- comment -%} Editor {%- endcomment -%}
       {% if story.editor %} 
-        <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Edited by {{ story.editor }}</span></span></li>
+        <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">edited by {{ story.editor }}</span></span></li>
+      {% endif %}
+
+      {%- comment -%} Patron {%- endcomment -%}
+      {% if story.patron %} 
+        <li><span itemprop="funder" itemscope itemtype="http://schema.org/Person"><span itemprop="name">for {{ story.patron }}</span></span></li>
       {% endif %}
 
       {%- comment -%} Word Count {%- endcomment -%}
-      {% assign totalwords = 0 %}
-      {% for chapter in chapters %}
-        {% assign chapterwords = chapter.content | markdownify | number_of_words %}
-        {% assign totalwords = totalwords | plus: chapterwords %}
-      {% endfor %}
-      <li><span itemprop="wordCount">{{ totalwords | append: ' words' }}</span></li>
+      <li><span itemprop="wordCount">{% include wordcount.html story=page %}</span></li>
+
+      {%- comment -%} Reading Time {%- endcomment -%}
+      <li><span itemprop="timeRequired" title="{% include wordcount.html story=page %}, {% include readingtime.html story=page raw=true %}">
+        {%- include readingtime.html story=page -%}
+      </span></li>
+
+      {%- comment -%} Links Outbound {%- endcomment -%}
+      {% if story.links.deviantart %}
+        <li><a href="{{ story.links.deviantart }}">DeviantArt</a></li>
+      {% endif %}
 
       {%- comment -%} Tags {%- endcomment -%}
       {% include post-meta-tags.html post=story %}
@@ -54,7 +64,11 @@ layout: default
   {%- comment -%} Description Block {%- endcomment -%}
   {% if story.description %}
     <section class="post-content">
-      {{ story.description | markdownify }}
+      {%- capture desc -%}{{ story.description | markdownify }}{%- endcapture -%}
+      {% if chapters.size == 1 %}
+        {%- capture desc -%}<blockquote>{{ desc }}</blockquote>{%- endcapture -%}
+      {% endif %}
+      {{ desc }}
     </section>
   {% endif %}
 
@@ -68,14 +82,20 @@ layout: default
 
 
   {%- comment -%} Post Lists {%- endcomment -%}
-  {%- include story-chapter-toc.html chapters=chapters -%}
+  {% if chapters.size > 1 %}
+    <section class="post-subcontainer">
+      {%- include story-chapter-toc.html chapters=chapters -%}
+    </section>
+  {% endif %}
+  
 
 
   {%- comment -%} CHAPTERS {%- endcomment -%}
 
   {% for chapter in chapters  %}
-  <hr>
-  <article class="chapter" itemscope itemtype="https://schema.org/Chapter">
+  <hr {% if forloop.first == true %} style="visibility: hidden;" {%- endif -%}>
+  {%- assign article_id = chapter.entry | replace: "'", "" | slugify -%}
+  <article class="chapter" id="{{ article_id }}" itemscope itemtype="https://schema.org/Chapter">
     
     {% if chapters.size > 1 %}
     <header class="post-header">
@@ -89,7 +109,7 @@ layout: default
         {% unless entry %}
           {% assign entry = "Untitled" %}
         {% endunless %}
-        <span><a href="{{chapter.url}}">{{ entry }}</a></span>
+        <span><a href="{{chapter.url}}" title="Go to the chapter page...">{{ entry }}</a></span>
         
       </h1>
 
@@ -104,6 +124,13 @@ layout: default
 
         {%- comment -%} Tags {%- endcomment -%}
         {%- comment -%} {% include post-meta-tags.html post=chapter %} {%- endcomment -%}
+
+        {%- comment -%} Comments Link {%- endcomment -%}
+        {%- comment -%}
+        {% if chapter.deviantart %}
+          <li><a href="{{ chapter.deviantart }}">Comment</a></li>
+        {% endif %}
+        {%- endcomment -%}
       </ul>
 
     </header>    

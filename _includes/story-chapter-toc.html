@@ -1,41 +1,89 @@
 {%- comment -%} Post Lists {%- endcomment -%}
-{% assign parts = include.chapters | group_by: 'part' %}
 
-{% assign i = 1 %}
-<ol class="part-list">
+{%- assign first = include.chapters.first -%}
+{%- assign story = site.stories | find: "title", first.series -%}
+{%- assign storylinkonly = include.forcestorylink -%}
+{%- if include.chapters.size == 1 and first.series == first.entry -%}{%- assign storylinkonly = true -%}{%- endif -%}
+{%- assign locallinks = include.forcelocallinks -%}
+{%- if page.collection == "stories" -%}{%- assign locallinks = true -%}{%- endif -%}
 
-  {% for part in parts %}
-  <li>
 
-    {% unless parts.size > 1 and part.items.size == 1 and part.name == part.items[0].entry %}
-      <h4 class="list-heading">{{ part.name }}</h4>
-    {% endunless %}
+{% if storylinkonly %}
+  {%- comment -%} Simple Single Chapter {%- endcomment -%}
+  <span class="chapter-single {% include illustrated-tag.html post=first %}">
+    <a class="chapter-title" href="{{ story.url | prepend: site.baseurl }}">Read the Story...</a>
+  </span>
 
-    <ol class="chapter-list" start="{{ i }}">
+{% else %}
+  {%- comment -%} Full List Prepare {%- endcomment -%}
 
-      {% for chapter in part.items %}
-      {% assign i = i | plus: 1 %}
-      <li class="{%- include illustrated-tag.html post=chapter -%}">
+  {%- capture partlist -%}
+  <ol class="part-list">
+    {% assign parts = include.chapters | group_by: 'part' %}
+    {% assign i = 1 %}
+    {% for part in parts %}
+    <li>
 
-        {% if chapter.series == chapter.entry %}
-          <a class="chapter-title" href="{{ story.url | prepend: site.baseurl }}">Read the Story...</a>
-        {% else %}
-          <a class="chapter-title" href="{{ chapter.url | prepend: site.baseurl }}">{{ chapter.entry }}</a>
-        {% endif %}
+      {% unless parts.size > 1 and part.items.size == 1 and part.name == part.items[0].entry %}
+        <h4 class="list-heading">{{ part.name }}</h4>
+      {% endunless %}
 
-        <!-- <span class="list-meta">{{ chapter.content | number_of_words }} words</span> -->
-        <!-- <time class="list-meta" datetime="{{ chapter.date | date_to_xmlschema }}">{{ chapter.date | date: "%b %d, %Y" }}</time> -->
+      <ol class="chapter-list" start="{{ i }}">
 
-        {% if chapter.description %}
-          <span class="list-meta">{{ chapter.description }}</span>
-        {% endif %}
+        {% for chapter in part.items %}
+        {% assign i = i | plus: 1 %}
+        <li class="{%- include illustrated-tag.html post=chapter -%}">
 
-      </li>
-      {% endfor %}
+          {%- assign href = chapter.url | prepend: site.baseurl -%}
+          {%- assign title = "Go to the chapter page..." -%}
+          {% if locallinks %}
+            {%- assign href = chapter.entry | replace: "'", "" | slugify | prepend: '#' -%}
+            {%- assign title = "Jump down to this chapter..." -%}
+          {% endif %}
 
-    </ol>
+          <a class="chapter-title" href="{{ href }}" title="{{ title }}">{{ chapter.entry }}</a>
 
-  </li>
-  {% endfor %}
+          {% if chapter.description %}
+            <span class="list-meta chapter-summary">{{ chapter.description }}</span>
+          {% endif %}
 
-</ol>
+        </li>
+        {% endfor %}
+
+      </ol>
+
+    </li>
+    {% endfor %}
+
+  </ol>
+  {%- endcapture -%}
+
+  {%- comment -%} Accordion Container {%- endcomment -%}
+  {% if include.chapters.size <= 3 %}
+    {{ partlist }}
+  {% else %}
+    {%- assign inputid = story.title | slugify | prepend: 'list-accord_' }} -%}
+    <div id="{{ inputid }}" class="list-accordion">
+      
+      <div class="list-accordion-overlay"> 
+        {%- unless locallinks -%}
+          <span class="list-accordion-link-other">
+            <a href="{{ story.url | prepend: site.baseurl }}">Read the Full Story...</a>
+          </span>
+        {%- endunless -%}
+        <button class="list-accordion-button" onclick="accordion.open(this, '{{ inputid }}')">
+          {%- if locallinks -%}
+            Expand chapter list...
+          {%- else -%}
+            Expand {{include.chapters.size }} chapters...
+          {%- endif -%}
+        </button>
+      </div>
+      <div class="list-accordion-content">
+        {{ partlist }}
+      </div>
+    </div>
+  {% endif %}
+
+  
+{% endif %}

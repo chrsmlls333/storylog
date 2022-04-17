@@ -4,6 +4,8 @@ title: Stories
 permalink: /stories
 nav: true
 order: 1
+
+description: This page has a table of contents for nearly all the writing on this site. You're going to want to start here...
 ---
 
 {% include site-header.html %}
@@ -36,7 +38,7 @@ order: 1
     {%- assign stories = type.items | sort: 'date_last' | reverse -%}
     {% for story in stories %}
     {%- assign liid = story.title | replace: "'", "" | slugify | prepend: 'toc-' -%}
-    {%- assign litags = story.tags | join: "," | slugify: 'pretty' | replace: ",", " " -%}
+    {%- assign litags = story.tags | join: "," | slugify_cased: 'pretty' | replace: ",", " " -%}
     <li id="{{ liid }}" data-tags="{{ litags }}">
 
       {%- comment -%} Title/Link {%- endcomment -%}
@@ -110,13 +112,20 @@ order: 1
   {% for story in stories %}
   {%- assign chapters = site.chapters | where: "series", story.title -%}
   {%- assign article_id = story.title | replace: "'", "" | slugify -%}
-  {%- assign datatags = story.tags | join: "," | slugify: 'pretty' | replace: ",", " " -%}
+  {%- assign datatags = story.tags | join: "," | slugify_cased: 'pretty' | replace: ",", " " -%}
   <article class="story-summary" id="{{ article_id }}" data-tags="{{ datatags }}">
 
     {%- comment -%} Title Block {%- endcomment -%}
     <header class="post-header">
-      <h2 class="post-title">
-        <a href="{{ story.url }}">{{ story.title }}</a>
+      {% include post-nav.html story=story %}
+
+      {%- comment -%} Completeness {%- endcomment -%}
+      {%- assign classes = "" -%} 
+      {%- capture classes -%}{% unless story.complete %}in-progress asterisk{% endunless %}{%- endcapture -%}
+
+      <h2 class="post-title {{ classes }}">
+        <!-- <a href="{{ story.url }}" title="See the full story...">{{ story.title }}</a> -->
+        <span>{{ story.title }}</span>
       </h2>
 
       <ul class="post-meta">
@@ -125,22 +134,29 @@ order: 1
         <li>{%- include story-time.html post=story -%}</li>
 
         {%- comment -%} Author {%- endcomment -%}
-        {% if story.author %} 
+        {% if story.author and site.author != story.author %} 
           <li><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ story.author }}</span></span></li>
         {% endif %}
 
         {%- comment -%} Editor {%- endcomment -%}
         {% if story.editor %} 
-          <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Edited by {{ story.editor }}</span></span></li>
+          <li><span itemprop="editor" itemscope itemtype="http://schema.org/Person"><span itemprop="name">edited by {{ story.editor }}</span></span></li>
+        {% endif %}
+
+        {%- comment -%} Patron {%- endcomment -%}
+        {% if story.patron %} 
+          <li><span itemprop="funder" itemscope itemtype="http://schema.org/Person"><span itemprop="name">for {{ story.patron }}</span></span></li>
         {% endif %}
 
         {%- comment -%} Word Count {%- endcomment -%}
-        {% assign totalwords = 0 %}
-        {% for chapter in chapters %}
-          {% assign chapterwords = chapter.content | markdownify | number_of_words %}
-          {% assign totalwords = totalwords | plus: chapterwords %}
-        {% endfor %}
-        <li><span itemprop="wordCount">{{ totalwords | append: ' words' }}</span></li>
+        <li><span itemprop="timeRequired" title="{% include wordcount.html story=page %}, {% include readingtime.html story=page raw=true %}">
+          {%- include readingtime.html story=page -%}
+        </span></li>
+
+        {%- comment -%} Links Outbound {%- endcomment -%}
+        {% if story.links.deviantart %}
+          <li><a href="{{ story.links.deviantart }}">DeviantArt</a></li>
+        {% endif %}
 
         {%- comment -%} Tags {%- endcomment -%}
         {% include post-meta-tags.html post=story %}
@@ -153,10 +169,10 @@ order: 1
     {%- comment -%} Watermark {%- endcomment -%}
     {% if story.watermark %}
       {% assign opacity = "" %}
-      {% if story.watermarkopacity %}
-        {% assign opacity = story.watermarkopacity | prepend: ' opacity: ' | append: '; ' %}
+      {% if story.watermark.opacity %}
+        {% assign opacity = story.watermark.opacity | prepend: ' opacity: ' | append: '; ' %}
       {% endif %}
-      <div class="watermark" style=" {{ opacity }} background-image: url('/assets/images/watermarks/{{ story.watermark }}');"></div>
+      <div class="watermark" style=" {{ opacity }} background-image: url('/assets/images/watermarks/{{ story.watermark.image }}');"></div>
     {% endif %}
 
 
@@ -177,9 +193,11 @@ order: 1
 
 
     {%- comment -%} Post Lists {%- endcomment -%}
-    {%- include story-chapter-toc.html chapters=chapters -%}
+    <section class="post-subcontainer">
+      {%- include story-chapter-toc.html chapters=chapters forcestorylink=story.forcestorylink -%}
+    </section>
 
-
+    
   </article>
   <hr>
   {% endfor %}

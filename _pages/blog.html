@@ -21,7 +21,7 @@ order: 2
     <ul class="post-meta">
 
       {%- comment -%} Post Date {%- endcomment -%}
-      <li>{%- include post-time.html post=post shorten=true -%}</li>
+      <li>{%- include post-time.html post=post shorten=false -%}</li>
       
       {%- comment -%} Author {%- endcomment -%}
       {%- comment -%}
@@ -40,6 +40,10 @@ order: 2
 
     </ul>
   </header>
+
+  {% if post.image %}
+    <img class="post-image" src="{{ post.image }}">
+  {% endif %}
 
   <div class="post-content" itemprop="articleBody">
     {{ post.excerpt }}

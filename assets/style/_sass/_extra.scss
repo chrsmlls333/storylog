@@ -10,6 +10,17 @@
 }
 
 /*
+    Hiding and Erasing
+*/
+
+.hidden {
+    display: none !important;
+}
+.invisible {
+    visibility: hidden !important;
+}
+
+/*
     Target highlighting/scolling 
 */
 @media (prefers-reduced-motion: no-preference) { 
@@ -20,30 +31,20 @@
 
 //footnotes
 .post-content {
-    :target { 
-        animation: footnote-fade 5s ease 1;
+    [role*="doc"] {
+        &:target { 
+            animation: footnote-fade 5s ease 1;
 
-        @keyframes footnote-fade {
-            0% { 
-                color: var(--color-text-highlight);
-                background-color: var(--color-background-highlight); 
+            @keyframes footnote-fade {
+                0% { 
+                    color: var(--color-text-highlight);
+                    background-color: var(--color-background-highlight); 
+                }
             }
         }
     }
 }
 
-//tags
-.tag-title {
-    &:target::before { 
-        animation: tag-fade 5s ease 1;
-
-        @keyframes tag-fade {
-            0% { 
-                color: var(--color-text-bold);
-            }
-        }
-    }
-}
 
 //stories
 .story-summary {
@@ -118,7 +119,7 @@
 /*
     Illustration Icons
 */
-li.illustrated {
+.illustrated {
     list-style-type: none;
 
     @mixin icon-mask {
@@ -130,14 +131,14 @@ li.illustrated {
 
         background-color: var(--color-grey);
 
-        @include mode-transition-default;
+        @include mode-transition();
     }
 
     &::before {
         content: '';
         display: inline-block;
 
-        height: calc( var(--line-height-base) * 0.9em);
+        height: calc( var(--line-height-base) * 1em);
         width: 1em;
 
         position: absolute;
@@ -159,11 +160,11 @@ li.illustrated {
 */
 .asterisk.asterisk.asterisk {
     &::after {
-        content: "*";
+        content: "*" !important;
         position: absolute;
-        color: var(--color-text-bold);
+        color: red;
 
-        @include mode-transition-default;
+        @include mode-transition();
 
         //reset
         background: none;
@@ -171,6 +172,12 @@ li.illustrated {
         @include prefix((
             filter: unset,
         ), webkit);
+    }
+
+    &:hover::after {
+        content: "wip" !important;
+        vertical-align: super;
+        font-size: .67em;
     }
 }
 
@@ -186,6 +193,14 @@ a[href^="mailto:"] {
 
     figure &::after {
         content: none;
+    }
+
+    .card-header &::after {
+        content: inherit;
+    }
+
+    &.asterisk.asterisk.asterisk::after {
+        content: "*";
     }
 }
 
@@ -265,6 +280,7 @@ a[href^="mailto:"] {
     padding: calc( (#{$w} / 2) - (#{$iw} / 4) ) 
              calc( (#{$w} / 2) - (#{$iw} / 2) );
 
+    z-index: 1000;
     cursor: pointer;
     background-color: transparent;
 
@@ -305,14 +321,14 @@ a[href^="mailto:"] {
 }
 
 /*
-    Discord
+    Discord/Deviantart Comment Links
 */
-.discord-link {
+.comments-link {
     display: flex;
     align-items: center;
     text-align: center;
 
-    margin: su(1.5) 
+    margin: su(2.5) 
             auto
             su(0.5);
 
@@ -324,14 +340,39 @@ a[href^="mailto:"] {
 
         margin: 0 0.5em;
 
-        @include mode-transition-default;
+        @include mode-transition();
+
+        display: inline-flex;
+        align-items: center;
+        // justify-content: center;
+
+        @mixin icon-before {
+            display: inline-flex;
+            width: 1em;
+            margin-right: 0.5em;
+        }
+
+        &.deviantart::before {
+            @include icon-before;
+            content: url('/assets/icon/DeviantArt_Logo.svg');
+        }
+
+        &.discord::before {
+            @include icon-before;
+            content: url('/assets/icon/Discord-Logo-Color.svg');
+        }
+
+        &.literotica::before {
+            @include icon-before;
+            content: url('/assets/icon/Literotica_logo2.svg');
+        }
     }
 
     &::before, &::after {
         content: '';
         flex: 1;
         border-top: medium dotted var(--color-grey-light);
-        @include mode-transition-default;
+        @include mode-transition(border-color);
     }
 
     @extend %print-hide;

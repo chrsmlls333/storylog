@@ -4,7 +4,7 @@
       
       {%- comment -%} Loop through nav: true pages {%- endcomment -%}
       {% for p in pages_list %}
-         <span {% if forloop.first %}class="slash"{% endif %}>
+         <span {% if forloop.first %}class="slash home"{% endif %}>
             {%- if page.url == p.url -%}
                {{ p.title }}
             {%- else -%}

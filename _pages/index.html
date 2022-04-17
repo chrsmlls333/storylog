@@ -4,33 +4,20 @@ title: Storylog
 permalink: /
 nav: true
 order: 0
-
-intro: |
-  John Doe is a writer. Duis imperdiet lacus non nibh facilisis, in interdum nibh finibus. Etiam tempor risus vel varius.
-  
-  Nam sagittis, ex sit amet convallis maximus, arcu nisl accumsan mauris, quis ornare erat tellus sit amet turpis. Curabitur pulvinar consectetur ante quis vulputate. Ut semper nunc lacus, id maximus felis vulputate et. Pellentesque et.
-
-adult_warning: |
-  Things you should know in this disclaimer!
-
-  Donec diam leo, vestibulum et nunc at, accumsan semper lectus. Aenean varius cursus ante. Curabitur massa mauris, rhoncus ut porttitor at, commodo nec lorem. Praesent quis quam bibendum, scelerisque elit quis, mollis nulla. Donec non.
-
-  Phasellus scelerisque, ipsum sit amet volutpat elementum, massa elit finibus justo, sed dignissim metus tortor vel elit. Maecenas ut eros malesuada diam rutrum scelerisque. Nunc rutrum odio sit amet massa bibendum posuere. Ut felis massa.
-
 ---
 
 {% include site-header.html %}
 
 <section class="site-intro">
 	<!-- <h2>About the Author</h2> -->
-	{{ page.intro | markdownify }}
+	{{ site.data.text.index.intro | markdownify }}
 </section>
 
 <section class="box-section">
 	<!-- <h2 class="section-title">Latest Updates</h2> -->
 	<ul class="index-list leader-list">
 		{% assign chapters = site.chapters | concat: site.posts | sort: 'date' | reverse %}
-		{% for chapter in chapters limit: 10 %}
+		{% for chapter in chapters limit: 15 %}
     	<li class="{{ chapter.collection }} {% include illustrated-tag.html post=chapter %}">
 			{% assign title = chapter.title %}
 			{% if chapter.is_post %}
@@ -51,7 +38,7 @@ adult_warning: |
 
 <section class="adult-warning">
   <!-- <h2>Content Warning</h2> -->
-  {{ page.adult_warning | markdownify }}
+  {{ site.data.text.index.adult_warning | markdownify }}
 </section>
 
 

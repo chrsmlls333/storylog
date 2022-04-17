@@ -39,7 +39,7 @@
         @include dark-mode {
             background-color: invert(invert($bg-color-base, 85%)) !important;
         }
-        @include mode-transition-default;
+        @include mode-transition();
     }
 
     .commento-button {

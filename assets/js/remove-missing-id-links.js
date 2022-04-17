@@ -1,4 +1,4 @@
-(function() {
+var linkUtil = (function() {
 
   /**
    * @description Remove any local id links that dont exist here
@@ -12,11 +12,12 @@
   }
 
   const removeMissingIdLinks = () => {
+    var newElements = [];
 
     // Get all elements with an id to scan
     var idElements = document.querySelectorAll('[id]');
     var ids = Array.prototype.map.call( idElements, el => el.id );
-    // console.log(ids);
+    ids.push(""); //add a match for # so we do not alter those.
 
     // Get all local links and filter them by the previous array
     var aElements = document.querySelectorAll('a[href^="#"]');
@@ -32,11 +33,23 @@
       });
       em.classList.add('link-missing')
       a.replaceWith(em);
+      newElements.push(em);
     });
+
+    if (newElements.length > 0) {
+      console.warn("Some anchor links were not valid:")
+      console.warn(newElements);
+    }
+
+    return newElements;
   }
 
-  // EVENTS //////////////////////////////////////////////////////////////////////////////////////////
+  // EVENTS //////////////////////////////////////////
 
   domReady(removeMissingIdLinks);
+
+  // EXPOSE //////////////////////////////////////////
+
+  return { removeMissingIdLinks }
 
 })()

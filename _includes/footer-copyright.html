@@ -1,9 +1,16 @@
 <footer class="site-footer">
   <span class="copyright"><span>&copy; {{ site.time | date: '%Y' }}</span>&nbsp;<a href="{% link _pages/index.html %}">{{ site.title }}</a></span>
   <span class="contact"><a href="mailto:{{ site.email }}">Contact</a></span>
-  {% if site.discord %}
-    <span class="discord"><a href="{{ site.discord }}">Discord</a></span> 
-  {% endif %}
+  
+  {% unless page.comment %}
+    {% if site.deviantart %}
+      <span class="deviantart"><a href="{{ site.deviantart }}">DeviantArt</a></span>
+    {% endif %}
+    {% if site.discord %}
+      <span class="discord"><a href="{{ site.discord }}">Discord</a></span> 
+    {% endif %}
+  {% endunless %}
+  
   {%- comment -%}<span><a href="{% link _pages/feed.xml %}">RSS</a></span>{%- endcomment -%}
-  <span><a id="theme-toggle"></a></span>
+  <span aria-label="Light/Dark Mode Toggle"><a id="theme-toggle"></a></span>
 </footer>

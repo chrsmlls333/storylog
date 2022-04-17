@@ -32,12 +32,12 @@ body {
     color: var(--color-text-base);
     background-color: var(--color-background);
 
-    @include mode-transition-default;
+    @include mode-transition();
 }
 strong {
     color: var(--color-text-bold);
 
-    @include mode-transition-default;
+    @include mode-transition();
 }
 
 /**
@@ -73,7 +73,11 @@ img {
  * Figures
  */
 figure {
-    padding: su();
+    padding: su(0.5);
+    @include media-query($on-palm) {
+        padding-left:  su(0.25);
+        padding-right: su(0.25);
+    }
 
     & + & {
         padding-top: 0;
@@ -93,7 +97,7 @@ figure {
         font-style: italic;
         text-align: center;
 
-        @include mode-transition-default;
+        @include mode-transition();
     }
 }
 
@@ -119,7 +123,7 @@ li {
     color: var(--color-text-bold);
     font-weight: var(--font-weight-base);
 
-    @include mode-transition-default;
+    @include mode-transition();
 }
 
 /**
@@ -133,7 +137,7 @@ a {
         text-decoration: underline;
     }
 
-    @include mode-transition-default;
+    @include mode-transition();
 }
 
 /**
@@ -157,7 +161,7 @@ blockquote {
         margin-left: su(-0.25);
     }
 
-    @include mode-transition-default;
+    @include mode-transition();
 }
 
 /**
@@ -189,7 +193,7 @@ pre {
         color: inherit;
     }
 
-    @include mode-transition-default;
+    @include mode-transition(border-color);
 }
 
 /**
@@ -213,13 +217,13 @@ th {
     text-align: left;
     vertical-align: bottom;
     border-bottom: 2px solid var(--color-grey-light);
-    @include mode-transition-default;
+    @include mode-transition(border-color);
 }
 
 td {
     vertical-align: top;
     border-bottom: 1px solid var(--color-grey-light);
-    @include mode-transition-default;
+    @include mode-transition(border-color);
 }
 
 /**
@@ -240,6 +244,29 @@ hr {
         visibility: hidden;
     }
 
-    @include mode-transition-default;
+    @include mode-transition(border-color);
 }
 
+/**
+ * De-style Buttons
+ * 
+ */
+
+button {
+    align-items: normal;
+    background-color: rgba(0,0,0,0);
+    border-color: rgb(0, 0, 238);
+    border-style: none;
+    box-sizing: content-box;
+    color: rgb(0, 0, 238); 
+    cursor: pointer;
+    display: inline;
+    font: inherit;
+    height: auto;
+    padding: 0;
+    perspective-origin: 0 0;
+    text-align: start;
+    text-decoration: underline;
+    transform-origin: 0 0;
+    width: auto;
+}

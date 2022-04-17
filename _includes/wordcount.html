@@ -1,0 +1,22 @@
+{%- assign totalwords = 0 -%}
+
+{%- if include.story -%}
+    {% assign _chapters = site.chapters | where: "series", include.story.title %}
+{%- endif -%}
+
+{%- if include.chapters or _chapters -%}
+    {%- for chapter in chapters -%}
+        {%- assign chapterwords = chapter.content | markdownify | number_of_words -%}
+        {%- assign totalwords = totalwords | plus: chapterwords %}
+    {%- endfor -%}
+{%- endif -%}
+
+{%- if include.post -%}
+    {%- assign totalwords = include.post.content | markdownify | number_of_words -%}    
+{%- endif -%}
+
+{%- if include.raw -%}
+    {{ totalwords }}
+{%- else -%}
+    {{ totalwords | append: ' words' }}
+{%- endif -%}

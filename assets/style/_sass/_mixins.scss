@@ -73,17 +73,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // Shorthand
-@mixin mode-transition($property...) {
+@mixin mode-transition($properties...) {
+    $defaults: color, background-color;
+    $list: append($defaults, $properties);
     @include prefix((
-        transition-property: $property,
-        transition-duration: $theme-transition-duration,
-        transition-timing-function: $theme-transition-curve,
-        transition-delay: $theme-transition-delay,
+        transition-property: $list,
+        transition-duration: var(--transition-duration),
+        transition-timing-function: var(--transition-curve),
+        transition-delay: var(--transition-delay),
     ), webkit);
 }
 
 @mixin mode-transition-default() {
-    @include mode-transition(color, background-color, border-color)
+    @include mode-transition();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -15,18 +15,13 @@
 $on-palm:           600px;
 $on-:               850px;
 
-// Timings
-$theme-transition-duration: 300ms;
-$theme-transition-curve:    ease;
-$theme-transition-delay:    0s;
-
 
 // Colors needed for both themes
-$color-background-base-ref:      #fff;
+$color-background-base-ref:      #eee; //#f0f0f0;
 $color-background-highlight-ref: #fee9ad; // #fefac7;
 $color-text-base-ref:            #333;
 $color-text-link-ref:            #000;
-$color-grey-ref:                 #aaa;
+$color-grey-ref:                 #999;
 
 @mixin css-vars {
     // $base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -45,12 +40,19 @@ $color-grey-ref:                 #aaa;
     
     --spacing-unit:         2rem;
     --max-width:            48rem;
+
+    --transition-duration:  300ms;
+    --transition-curve:     ease;
+    --transition-delay:     0s;
 }
 
 // LIGHT THEME
 @mixin light-theme {
 
+    --color-absolute:               white;
+
     --color-background:             #{ $color-background-base-ref };
+    --color-background-trans:       #{ rgba($color-background-base-ref, 0.5) };
     --color-text-base:              #{ $color-text-base-ref };
     --color-text-bold:              #{ $color-text-base-ref };
     --color-text-link:              #{ $color-text-link-ref };
@@ -59,7 +61,7 @@ $color-grey-ref:                 #aaa;
     --color-background-highlight:   #{ fade-out($color-background-highlight-ref, 25% / 100%) };
     
     --color-grey:                   #{ $color-grey-ref };
-    --color-grey-faint:             #{ lighten($color-grey-ref, 30%) };
+    --color-grey-faint:             #{ lighten($color-grey-ref, 31%) };
     --color-grey-light:             #{ lighten($color-grey-ref, 25%) };
     --color-grey-dark:              #{ darken($color-grey-ref, 25%) };
 }
@@ -67,9 +69,14 @@ $color-grey-ref:                 #aaa;
 // DARK THEME
 @mixin dark-theme {
 
-    --color-background:             #{ invert($color-background-base-ref, 85%) };
-    --color-text-base:              #{ invert($color-text-base-ref) };
-    --color-text-bold:              #{ lighten(invert($color-text-base-ref), 10%) };
+    --color-absolute:               black;
+
+    $color-background-inv-ref:         invert($color-background-base-ref, 91%);
+    --color-background:             #{ $color-background-inv-ref };
+    --color-background-trans:       #{ rgba($color-background-inv-ref, 0.5) };
+    $color-text-inv-ref:               invert($color-text-base-ref);
+    --color-text-base:              #{ $color-text-inv-ref };
+    --color-text-bold:              #{ lighten($color-text-inv-ref, 10%) };
     --color-text-link:              #{ invert($color-text-link-ref) };
 
     --color-text-highlight:         #{ $color-text-base-ref };
@@ -77,7 +84,7 @@ $color-grey-ref:                 #aaa;
 
     $color-grey-new-ref:               lighten(invert($color-grey-ref), 10%);
     --color-grey:                   #{ $color-grey-new-ref };
-    --color-grey-faint:             #{ darken($color-grey-new-ref, 25%) };
+    --color-grey-faint:             #{ darken($color-grey-new-ref, 30%) };
     --color-grey-light:             #{ darken($color-grey-new-ref, 20%) };
     --color-grey-dark:              #{ lighten($color-grey-new-ref, 20%) };
 }

@@ -3,52 +3,57 @@
 {% assign post = page %}
 {% if include.post %}{% assign post = include.post %}{% endif %}
 
-{% assign rawtags = "" %}
+{%- comment -%} Create Empty Array {%- endcomment -%}
+{% assign rawtags = '' | split: '' %}
 
-{%- comment -%} Handle Stories Fullpage {%- endcomment -%}
-{% if post.collection == 'stories' %}
+{% if include.tags %}
+  {%- comment -%} If given a set of tags to handle {%- endcomment -%}
+
+  {% assign t = include.tags %}
+  {% if t.first %} 
+    {%- comment -%} is not a string {%- endcomment -%}
+    {% assign rawtags = rawtags | concat: t %}
+  {% else %} 
+    {%- comment -%} is a string {%- endcomment -%}
+    {% assign t = t | split: ', ' %}
+    {% assign rawtags = rawtags | concat: t %}
+  {% endif %}  
+
+{% else %}
+  {%- comment -%} If deriving tags from current post/page {%- endcomment -%}
   
-{% endif %}
-
-{%- comment -%} Handle Stories Collection Series {%- endcomment -%}
-{% if post.collection == 'chapters' and post.series %}
-  {% assign story = site.stories | find: "title", post.series %}
-  {% if story.tags.size > 0 %}
-    {% assign ttags = story.tags | join:'|' | append:'|' %}
-    {% assign rawtags = rawtags | append: ttags %}
+  {%- comment -%} Handle Stories Fullpage {%- endcomment -%}
+  {% if post.collection == 'stories' %}
+    
   {% endif %}
-{% endif %}
 
-{%- comment -%} Handle normal tags {%- endcomment -%}
-{% if post.tags.size > 0 %}
-  {% assign ttags = post.tags | join:'|' | append:'|' %}
-  {% assign rawtags = rawtags | append: ttags %}
+  {%- comment -%} Handle Stories Collection Series {%- endcomment -%}
+  {% if post.collection == 'chapters' and post.series %}
+    {% assign story = site.stories | find: "title", post.series %}
+    {% if story.tags.size > 0 %}
+      {% assign rawtags = rawtags | concat: story.tags %}
+    {% endif %}
+  {% endif %}
+
+  {%- comment -%} Handle normal tags {%- endcomment -%}
+  {% if post.tags.size > 0 %}
+    {% assign rawtags = rawtags | concat: post.tags %}
+  {% endif %}
+
 {% endif %}
 
 {%- comment -%} Dedupe Tags {%- endcomment -%}
-{% assign rawtags = rawtags | split:'|' %}
-{%- comment -%}
-{% assign rawtags = rawtags | sort_natural %}
-{%- endcomment -%}
-{% assign tags = "" %}
-{% for tag in rawtags %}
-  {% if tag != "" %}
-    {% if tags == "" %}
-      {% assign tags = tag | split:'|' %}
-    {% endif %}
-    {% unless tags contains tag %}
-      {% assign tags = tags | join:'|' | append:'|' | append:tag | split:'|' %}
-    {% endunless %}
-  {% endif %}
-{% endfor %}
+{% assign tags = rawtags | uniq %}
 
 {%- comment -%} Construct HTML Tags Array {%- endcomment -%}
 {% if tags.size > 0 %}
   {% assign tags_content = "" %}
   {% for post_tag in tags %}
+    {%- capture href -%}href="{% link _pages/tags.html %}#{{ post_tag | slugify_cased: "pretty" }}"{%- endcapture -%}
+    {% if include.links == false %}{% assign href = "" %}{% endif %}
     {% capture tags_content_temp %}
       {{ tags_content }}
-      <li><a class="tag" href="{% link _pages/tags.html %}#{{ post_tag | slugify: "pretty" }}">#{{ post_tag }}</a></li>
+      <li><a class="tag" {{ href }}>#{{ post_tag }}</a></li>
     {% endcapture %}
     {% assign tags_content = tags_content_temp %}
   {% endfor %}

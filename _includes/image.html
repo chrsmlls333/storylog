@@ -1,21 +1,18 @@
 {%- comment -%} https://stackoverflow.com/questions/19331362/using-an-image-caption-in-markdown-jekyll {%- endcomment -%}
-{%- comment -%} Image box for later https://codepen.io/gschier/pen/HCoqh {%- endcomment -%}
+
+{%- assign lightboxID = include.src | default: include.srcabs | slugify | prepend: 'lightbox-' -%}
+
+{%- capture src -%}
+    {%- if include.srcabs -%}{{ include.srcabs }}
+    {%- else -%}{{ site.baseurl }}{{ site.imagepath }}{{ include.src }}
+    {%- endif -%}
+{%- endcapture -%}
+
 <figure>
 
-    {% if include.url %}<a href="{{ include.url }}">{% endif %}
-    
-    <img
-        {% if include.srcabs %}
-            src="{{ include.srcabs }}"
-        {% else %}
-            src="{{ site.baseurl }}{{ site.imagepath }}{{ include.src }}"
-        {% endif %}
-        {% if include.style %}
-            style="{{ include.style }}"
-        {% endif %}
-    alt="{{ include.alt }}">
-
-    {% if include.url %}</a>{% endif %}
+    <a href="{{ include.url | default: src }}">
+        <img src="{{ src }}" {% if include.style %} style="{{ include.style }}" {% endif %} alt="{{ include.alt }}">
+    </a>
 
     {% if include.caption %}
         <figcaption>{{ include.caption }}</figcaption>

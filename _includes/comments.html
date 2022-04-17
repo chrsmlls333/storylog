@@ -13,14 +13,21 @@
 {% endif %}
 
 {%- comment -%} COMMENTO {%- endcomment -%}
-{% if false %}
+{% if site.commento %}
   <script defer src="https://cdn.commento.io/js/commento.js"></script>
   <div id="commento"></div>
 {% endif %}
 
-{%- comment -%} DISCORD {%- endcomment -%}
-{% if site.discord %}
-  <section class="discord-link">
-    <a href="{{ site.discord }}">Discuss over on the Discord</a>
-  </section>
-{% endif %}
+{%- comment -%} DISCORD/DEVIANTART {%- endcomment -%}
+<section class="comments-link">
+  {% if page.links.deviantart %}
+  <a class="deviantart" href="{{ page.links.deviantart }}#comments" title="Comment on DeviantArt" aria-label="Comment on DeviantArt" >
+    Comment
+  </a>
+  {% endif %}
+  {% if site.discord %}
+  <a class="discord" href="{{ site.discord }}" title="Discuss on Discord" aria-label="Discuss on Discord" >
+    Chat
+  </a>
+  {% endif %}
+</section>
