@@ -3,7 +3,7 @@ title:        "StoryLog"
 description:  >-
   Minimalist Jekyll theme for a writer's site
 baseurl:      "" # required if used under gh-pages branch, else (under master branch) just leave empty/blank
-url:          "https://gh-pages.d3l2hvqu0x0axr.amplifyapp.com/"
+url:          "https://source.d3l2hvqu0x0axr.amplifyapp.com/"
 author:       "John Doe"
 email:        ""
 
