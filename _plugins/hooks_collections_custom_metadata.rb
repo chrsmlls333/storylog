@@ -39,6 +39,27 @@ Jekyll::Hooks.register :stories, :pre_render do |story, payload|
 end
 
 
+# STORIES DEVIANTART LINK INHERITANCE #########################
+
+Jekyll::Hooks.register :stories, :pre_render do |story, payload|
+
+  chapters = story.site.collections['chapters'].docs.select do |chapter|
+    chapter.data['series'] == story.data["title"]
+  end
+  next if chapters.empty?
+
+  links = chapters.map { |c| c.data['links'] }.compact
+  next if links.empty?
+
+  dev = links.map { |h| h['deviantart'] }.compact.last || nil
+
+  story.data['links'] = {
+    'deviantart' => dev
+  }
+  
+end
+
+
 # POSTS/COLLECTIONS FEATURED IMAGE DETECTION ##################
 Jekyll::Hooks.register :documents, :pre_render do |doc, payload|
 
@@ -53,3 +74,17 @@ Jekyll::Hooks.register :documents, :pre_render do |doc, payload|
   doc.data['tags'] = doc.data['tags'] | ['illustrated']
 
 end
+
+
+# COMMENT FLAG #############################################
+
+Jekyll::Hooks.register :documents, :pre_render do |doc, payload|
+
+  links = doc.data['links'] || {}
+  
+  if !links.empty?
+    doc.data['comment'] = true;
+  end
+
+end
+
