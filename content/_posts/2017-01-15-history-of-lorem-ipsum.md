@@ -2,6 +2,8 @@
 layout: post
 title: History of Lorem Ipsum
 tags: [Demo, Lorem Ipsum]
+author: Heiswayi Nrird
+date: 2017-01-15T17:00:00.000Z
 comment: true
 ---
 

@@ -3,6 +3,7 @@ layout: post
 title: About this Jekyll theme
 tags: [Demo, Jekyll]
 author: Chris Mills
+date: 2021-04-29T17:00:00.000Z
 comment: true
 ---
 

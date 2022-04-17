@@ -2,6 +2,8 @@
 layout: post
 title: Example content
 tags: [Demo, Example Content]
+author: Heiswayi Nrird
+date: 2017-01-15T17:00:00.000Z
 comment: true
 ---
 

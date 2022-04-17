@@ -2,6 +2,8 @@
 layout: post
 title: What's Jekyll?
 tags: [Demo, Jekyll]
+author: Heiswayi Nrird
+date: 2017-01-15T17:00:00.000Z
 comment: false
 ---
 
