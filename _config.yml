@@ -13,14 +13,19 @@ port:         4000
 destination:  ./_site
 
 exclude: 
-  - 'LICENSE'         #License
-  - 'README.md'       #Documentation
-  - 'CNAME'           #URL Pointer
-  - 'Gemfile'         #Ruby Packagelist
-  - 'Gemfile.lock'    #Ruby Packagelist
-  - '/vendor'         #Ruby Bundler Packages
-  - '.bundle/config'  #Ruby Bundler Config
-  - '/script'         #Utility Folder
+  - 'LICENSE'             #License
+  - 'README.md'           #Documentation
+  - 'CNAME'               #URL Pointer
+  - 'Gemfile'             #Ruby Packagelist
+  - 'Gemfile.lock'        #Ruby Packagelist
+  - '/vendor'             #Ruby Bundler Packages
+  - '.bundle/config'      #Ruby Bundler Config
+  - '/scripts'            #Utility Folder
+  - 'package.json'        #JavaScript Packagelist
+  - 'package-lock.json'   #JavaScript Packagelist
+  - 'netlify.toml'        #Netlify Build Script
+  - 'amplify.yml'         #Amplify Build Script
+  - 'workspace.code-workspace' #VSCode Project File
 
 include:
   - '_pages'          #Organizational hack

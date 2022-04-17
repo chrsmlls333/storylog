@@ -2,9 +2,13 @@ _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
-Gemfile.lock
 
 .bundle
 /vendor
 
+node_modules
+package.json
+package-lock.json
+
 *Zone.Identifier
+workspace.code-workspace
