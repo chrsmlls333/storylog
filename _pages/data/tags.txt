@@ -1,0 +1,21 @@
+---
+layout: null
+permalink: /tags.txt
+---
+
+{%- comment -%} Collect Tags {%- endcomment -%}
+
+{% assign rawtags = '' | split: '' %}
+
+
+{% assign allposts = site.posts | concat: site.stories | concat: site.chapters %}
+{% for post in allposts %}
+	{% assign rawtags = rawtags | concat: post.tags %}
+{% endfor %}
+
+{% assign tags = rawtags | sort | uniq | fm_custom_sort %}
+
+
+{% for tag in tags %}
+{{ tag }}
+{% endfor %}
